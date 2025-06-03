@@ -6,7 +6,7 @@ import { Navigate, Outlet } from "react-router"
 function App() {
   const { user, isLoaded, isSignedIn } = useUser();
 
-  if (!isSignedIn) {
+  if (!isSignedIn && isLoaded) {
     return <Navigate to={"/signin"} />
   }
   return (
