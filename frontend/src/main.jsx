@@ -6,6 +6,8 @@ import { BrowserRouter, Route, Routes } from 'react-router'
 import { SignInPage } from './auth/SignInPage.jsx'
 import { Home } from './Pages/Home.jsx'
 import { ClerkProvider } from '@clerk/clerk-react'
+import { Footer } from './components/ui/Footer.jsx'
+import { Layout } from './auth/Layout.jsx'
 
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -20,8 +22,9 @@ createRoot(document.getElementById('root')).render(
             <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<Home />} />
           </Route>
-          <Route path="/signin" element={<SignInPage />} />
+          <Route path="/signin" element={<Layout />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </ClerkProvider>
   </StrictMode>,
