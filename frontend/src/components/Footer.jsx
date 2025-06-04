@@ -4,9 +4,9 @@ export const Footer = () => {
             <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
                 {/* Company Info */}
                 <div>
-                    <h2 className="text-xl font-bold text-white">Autobee</h2>
+                    <h2 className="text-xl font-bold text-white">AutoBee</h2>
                     <p className="mt-2 text-sm">
-                        Autobee is your intelligent partner in buying, selling, and analyzing cars. Smarter trades start here.
+                        AutoBee is your intelligent partner in buying, selling, and analyzing cars. Smarter trades start here.
                     </p>
                 </div>
 
@@ -54,7 +54,7 @@ export const Footer = () => {
 
             {/* Bottom Section */}
             <div className="border-t border-gray-700 mt-10 pt-4 text-center text-sm">
-                <p>&copy; 2025 Autobee. All rights reserved.</p>
+                <p>&copy; 2025 AutoBee. All rights reserved.</p>
             </div>
         </footer>
     );
