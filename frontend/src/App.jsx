@@ -1,13 +1,15 @@
 import { Button } from "@/components/ui/button"
 import { useUser } from "@clerk/clerk-react"
 import { Navigate, Outlet } from "react-router"
-
+import { Home } from "./Pages/Home"
+import "./App.css"
 
 function App() {
   return (
     <>
-      <div className="flex flex-col items-center justify-center min-h-svh">
+      <div>
         <Outlet />
+        <Home />
       </div>
     </>
   )
