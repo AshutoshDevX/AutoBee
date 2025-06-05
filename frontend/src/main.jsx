@@ -9,7 +9,7 @@ import { Header } from './components/Header.jsx'
 import { SignInPage } from './auth/SignInPage.jsx'
 import { SignUpPage } from './auth/SignUpPage.jsx'
 import { Error } from './Pages/Error.jsx'
-
+import { Toaster } from 'sonner';
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
 
@@ -25,6 +25,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="*" element={<Error />} />
         </Routes>
+        <Toaster richColors />
         <Footer />
       </BrowserRouter>
     </ClerkProvider>
