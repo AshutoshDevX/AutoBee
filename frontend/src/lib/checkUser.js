@@ -1,8 +1,10 @@
 import { useUser } from "@clerk/clerk-react"
 import { db } from "./prisma";
 
-const { user } = useUser();
+
 export const checkUser = async () => {
+
+    const { user } = useUser();
     if (!user) {
         return null;
     }

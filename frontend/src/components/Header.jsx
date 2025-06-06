@@ -4,9 +4,11 @@ import AutobeeLogo from '../assets/AutobeeLogo.png'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, CarFront, Heart, Layout } from 'lucide-react';
-export const Header = ({ isAdminPage = false }) => {
+import { checkUser } from '../lib/checkUser';
+export const Header = async ({ isAdminPage = false }) => {
 
-    const isAdmin = false;
+    const user = await checkUser();
+    const isAdmin = user.role === "ADMIN";
     return (
         <header className="sticky top-0 bg-gray-900 w-full backdrop-blur-md z-100">
             <nav className="mx-auto px-4 py-2 flex items-center justify-between">
