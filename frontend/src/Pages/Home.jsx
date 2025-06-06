@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { HomeSearch } from '../components/HomeSearch'
 import { Button } from "@/components/ui/button"
 import { Calendar, Car, ChevronRight, Shield } from 'lucide-react'
@@ -13,7 +13,9 @@ import {
 } from "@/components/ui/accordion"
 import { SignedOut } from '@clerk/clerk-react'
 
+
 export const Home = () => {
+
     return (
         <div className="flex flex-col">
             <section className="relative py-16 md:py-28 dotted-background">

@@ -1,14 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router'
 import AutobeeLogo from '../assets/AutobeeLogo.png'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, CarFront, Heart, Layout } from 'lucide-react';
-import { checkUser } from '../lib/checkUser';
-export const Header = async ({ isAdminPage = false }) => {
-
-    const user = await checkUser();
-    const isAdmin = user.role === "ADMIN";
+import SyncUser from './SyncUser';
+import { useEffect } from 'react';
+export const Header = ({ isAdminPage = false }) => {
+    const [isAdmin, setIsAdmin] = useState(null);
+    const user = SyncUser();
+    useEffect(() => {
+        if (user) {
+            setIsAdmin(user.data.user.role)
+        }
+    }, [user]);
     return (
         <header className="sticky top-0 bg-gray-900 w-full backdrop-blur-md z-100">
             <nav className="mx-auto px-4 py-2 flex items-center justify-between">
@@ -32,7 +37,7 @@ export const Header = async ({ isAdminPage = false }) => {
                                         <span className="hidden md:inline">Saved Cars</span>
                                     </Button>
                                 </Link>
-                                {!isAdmin ? <Link to={"/reservations"}>
+                                {isAdmin === "USER" ? <Link to={"/reservations"}>
                                     <Button variant="outline">
                                         <CarFront size={18} />
                                         <span className="hidden md:inline">My Reservations</span>
