@@ -1,29 +1,14 @@
-// backend/index.js
-const express = require('express');
-const cors = require('cors');
-const { PrismaClient } = require('@prisma/client');
+import express from 'express';
+import prisma from './lib/prisma.js'
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
-const prisma = new PrismaClient();
-
-app.use(cors());
 app.use(express.json());
 
-// Get all cars
-app.get('/api/cars', async (req, res) => {
-    const cars = await prisma.car.findMany();
-    res.json(cars);
+app.get('/api/users', async (req, res) => {
+    const users = await prisma.user.findMany();
+    res.json(users);
 });
 
-// Save a car (example route)
-app.post('/api/save-car', async (req, res) => {
-    const { userId, carId } = req.body;
-    const saved = await prisma.userSavedCar.create({
-        data: { userId, carId }
-    });
-    res.json(saved);
-});
-
-app.listen(3000, () => {
-    console.log('Backend running on http://localhost:3000');
-});
+app.listen(3000, () => console.log('Server running at http://localhost:3000'));
