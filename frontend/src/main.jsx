@@ -10,6 +10,9 @@ import { SignInPage } from './auth/SignInPage.jsx'
 import { SignUpPage } from './auth/SignUpPage.jsx'
 import { Error } from './Pages/Error.jsx'
 import { Toaster } from 'sonner';
+import { Cars } from './Pages/main/Cars.jsx'
+import { AdminLayout } from './Pages/Admin/AdminLayout.jsx'
+
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
 
@@ -24,6 +27,8 @@ createRoot(document.getElementById('root')).render(
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="*" element={<Error />} />
+          <Route path="/cars/:id" element={<Cars />} />
+          <Route path="/admin" element={<AdminLayout />} />
         </Routes>
         <Toaster richColors />
         <Footer />
