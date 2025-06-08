@@ -2,24 +2,26 @@ import React, { useEffect, useState } from 'react'
 import { useAuth } from '@clerk/clerk-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
-
+import { useContext } from 'react';
+import { AdminContext } from '../../components/AdminContext';
 
 export const AdminLayout = () => {
 
     const { userId, isSignedIn, isLoaded } = useAuth();
     const [authorized, setAuthorized] = useState(true);
     const navigate = useNavigate();
-
-
+    const [isAdminPage, setIsAdminPage] = useContext(AdminContext);
     useEffect(() => {
         if (isLoaded && isSignedIn && userId) {
             const admin = async () => {
                 try {
                     const response = await axios.get(`http://localhost:3000/api/admin/${userId}`);
                     setAuthorized(response.data.authorized);
+                    setIsAdminPage(true);
                 } catch (err) {
                     setAuthorized(false);
                     console.error('Failed:', err);
+                    setIsAdminPage(false);
                 }
             };
 
@@ -42,7 +44,7 @@ export const AdminLayout = () => {
     }
     return (
         <>
-            {authorized && isSignedIn && <div>a;lsdkfja;sdfkjaf;dlkj</div>}
+            <div>SI asd;lkfasd;fk as;dlfkjads </div>
         </>
     )
 }
