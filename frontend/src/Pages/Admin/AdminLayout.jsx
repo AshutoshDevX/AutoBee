@@ -4,8 +4,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { useContext } from 'react';
 import { AdminContext } from '../../components/AdminContext';
-
-export const AdminLayout = () => {
+import { SideBar } from '../../components/SideBar';
+export const AdminLayout = ({ children }) => {
 
     const { userId, isSignedIn, isLoaded } = useAuth();
     const [authorized, setAuthorized] = useState(true);
@@ -43,8 +43,13 @@ export const AdminLayout = () => {
         );
     }
     return (
-        <>
-            <div>SI asd;lkfasd;fk as;dlfkjads </div>
-        </>
+        <div className="flex h-100">
+
+            <div className="flex h-full w-56 flex-col inset-y-0 z-50 bottom-25">
+                <SideBar />
+            </div>
+            <main>adsfasdf;lkjj</main>
+            {children}
+        </div>
     )
 }
