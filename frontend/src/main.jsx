@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+import { StrictMode, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
@@ -12,26 +12,28 @@ import { Error } from './Pages/Error.jsx'
 import { Toaster } from 'sonner';
 import { Cars } from './Pages/main/Cars.jsx'
 import { AdminLayout } from './Pages/Admin/AdminLayout.jsx'
+import { AdminProvider } from './components/AdminContext.jsx'
+
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
-
-
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ClerkProvider publishableKey={PUBLISHABLE_KEY} signInUrl="/signin"
       signUpUrl="/signup">
       <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/signin" element={<SignInPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="*" element={<Error />} />
-          <Route path="/cars/:id" element={<Cars />} />
-          <Route path="/admin" element={<AdminLayout />} />
-        </Routes>
-        <Toaster richColors />
-        <Footer />
+        <AdminProvider>
+          <Header />
+          <Routes>
+            <Route path="/" element={<App />} />
+            <Route path="/signin" element={<SignInPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="*" element={<Error />} />
+            <Route path="/cars/:id" element={<Cars />} />
+            <Route path="/admin" element={<AdminLayout />} />
+          </Routes>
+          <Toaster richColors />
+          <Footer />
+        </AdminProvider>
       </BrowserRouter>
     </ClerkProvider>
   </StrictMode>,
