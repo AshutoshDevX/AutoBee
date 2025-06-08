@@ -1,25 +1,32 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router'
 import AutobeeLogo from '../assets/AutobeeLogo.png'
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/clerk-react';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, CarFront, Heart, Layout } from 'lucide-react';
 import SyncUser from './SyncUser';
 import { useEffect } from 'react';
-export const Header = ({ isAdminPage = false }) => {
+import { useContext } from 'react';
+import { AdminContext } from './AdminContext.jsx';
+
+export const Header = () => {
     const [isAdmin, setIsAdmin] = useState(null);
     const user = SyncUser();
+    const { isSignedIn } = useUser();
+    const [isAdminPage] = useContext(AdminContext);
     useEffect(() => {
-        if (user) {
+        if (isSignedIn && user) {
             setIsAdmin(user.data.user.role)
         }
     }, [user]);
+
+
     return (
         <header className="sticky top-0 bg-gray-900 w-full backdrop-blur-md z-100">
             <nav className="mx-auto px-4 py-2 flex items-center justify-between">
                 <Link to={isAdminPage ? "/admin" : "/"} className="flex">
                     <img src={AutobeeLogo} alt="autobee logo" className="w-30" />
-                    {isAdminPage && (<span className="text-xs font-extralight">admin</span>)}
+                    {isAdminPage && (<span className="text-sm text-white bg-red font-extralight">admin</span>)}
                 </Link>
                 <div className="flex items-center space-x-4">
                     {
