@@ -52,9 +52,12 @@ export const AdminLayout = () => {
                 <div className="flex h-full w-56 flex-col fixed top-17 inset-y-0 z-50">
                     <SideBar />
                 </div>
+
                 <main className="md:pl-56  h-full">
                     <Outlet />
                 </main>
+                <div className="flex h-[100vh] w-56 flex-col inset-y-0 z-50">
+                </div>
             </div>
         </div>
 

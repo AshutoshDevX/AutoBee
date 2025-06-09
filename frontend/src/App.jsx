@@ -14,6 +14,7 @@ import { AdminLayout } from './Pages/Admin/AdminLayout.jsx'
 import { AdminPage } from "./Pages/Admin/AdminPage.jsx"
 import { Settings } from "./Pages/main/Settings/Settings.jsx"
 import { TestDrive } from "./Pages/main/test-drive/TestDrive.jsx"
+import { AddCarPage } from "./Pages/main/cars/components/AddCarPage.jsx"
 function App() {
   // const [isAdminPage] = useContext(AdminContext);
   const { pathname } = useLocation();
@@ -27,14 +28,16 @@ function App() {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="*" element={<Error />} />
           <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminPage />} />                {/* /admin */}
-            <Route path="cars" element={<Cars />} />          {/* /admin/cars */}
-            <Route path="settings" element={<Settings />} />  {/* /admin/settings */}
+            <Route index element={<AdminPage />} />
+            <Route path="cars" element={<Cars />} />
+            <Route path="cars/create" element={<AddCarPage />} />
+            <Route path="create" element={<AddCarPage />} />
+            <Route path="settings" element={<Settings />} />
             <Route path="test-drives" element={<TestDrive />} />
           </Route>
         </Routes>
         <Toaster richColors />
-        {pathname != "/admin/*" && <Footer />}
+        <Footer />
       </div>
     </>
   )
