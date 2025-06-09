@@ -5,7 +5,11 @@ import { useNavigate } from 'react-router';
 import { useContext } from 'react';
 import { AdminContext } from '../../components/AdminContext';
 import { SideBar } from '../../components/SideBar';
-export const AdminLayout = ({ children }) => {
+import { AdminPage } from './AdminPage';
+import { Outlet } from 'react-router';
+
+
+export const AdminLayout = () => {
 
     const { userId, isSignedIn, isLoaded } = useAuth();
     const [authorized, setAuthorized] = useState(true);
@@ -35,7 +39,7 @@ export const AdminLayout = ({ children }) => {
     }, [isLoaded, isSignedIn, authorized, navigate]);
 
 
-    if (isSignedIn === undefined) {
+    if (isSignedIn === undefined && isAdminPage == false) {
         return (
             <div className="flex justify-center items-center h-screen">
                 <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
@@ -43,13 +47,16 @@ export const AdminLayout = ({ children }) => {
         );
     }
     return (
-        <div className="flex h-100">
-
-            <div className="flex h-full w-56 flex-col inset-y-0 z-50 bottom-25">
-                <SideBar />
+        <div>
+            <div className="h-full">
+                <div className="flex h-full w-56 flex-col fixed top-17 inset-y-0 z-50">
+                    <SideBar />
+                </div>
+                <main className="md:pl-56  h-full">
+                    <Outlet />
+                </main>
             </div>
-            <main>adsfasdf;lkjj</main>
-            {children}
         </div>
+
     )
 }
