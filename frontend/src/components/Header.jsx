@@ -24,7 +24,7 @@ export const Header = () => {
     return (
         <header className="sticky top-0 bg-gray-900 w-full backdrop-blur-md z-100">
             <nav className="mx-auto px-4 py-2 flex items-center justify-between">
-                <Link to={isAdminPage ? "/admin" : "/"} className="flex">
+                <Link to={"/"} className="flex">
                     <img src={AutobeeLogo} alt="autobee logo" className="w-30" />
                     {isAdminPage && (<span className="text-sm text-white bg-red font-extralight">admin</span>)}
                 </Link>
