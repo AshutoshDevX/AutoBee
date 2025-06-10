@@ -115,7 +115,7 @@ export const AddCarForm = () => {
 
     const {
         loading: processImageLoading,
-        fn: processImageFn,
+        fnAi: processImageFn,
         data: processImageResult,
         error: processImageError,
     } = useFetch();
@@ -136,7 +136,7 @@ export const AddCarForm = () => {
 
 
     useEffect(() => {
-        if (processImageResult?.success) {
+        if (processImageResult?.data?.success) {
             const carDetails = processImageResult.data;
 
             // Update form with AI results
@@ -189,11 +189,12 @@ export const AddCarForm = () => {
         }
 
         setUploadedAiImage(file);
-
         const reader = new FileReader();
         reader.onload = (e) => {
+            console.log(e.target.result)
             setImagePreview(e.target.result);
         };
+        console.log(reader.readAsDataURL(file))
         reader.readAsDataURL(file);
     }, []);
 
