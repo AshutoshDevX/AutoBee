@@ -1,4 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { v4 as uuidv4 } from 'uuid';
+import { createClient } from '@supabase/supabase-js';
 
 
 const fileToBase64 = (file) => {
@@ -111,12 +113,13 @@ export const processCarImageWithAI = async (req, res) => {
 }
 
 
-export const addCar = async ({ carData, images }) => {
+export const addCar = async (req, res) => {
     try {
-        const { userId } = req.params;
+
+        const { userId, carData, images } = req.body;
         if (!userId) throw new Error("Unauthorized");
 
-        const user = await db.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: { clerkUserId: userId },
         });
 
@@ -127,8 +130,10 @@ export const addCar = async ({ carData, images }) => {
         const folderPath = `cars/${carId}`;
 
 
-        const cookieStore = await cookies();
-        const supabase = createClient(cookieStore);
+        const supabase = createClient(
+            process.env.VITE_SUPABASE_URL,
+            process.env.VITE_SUPABASE_ANON_KEY // Use service role for uploads
+        );
 
 
         const imageUrls = [];
@@ -176,7 +181,7 @@ export const addCar = async ({ carData, images }) => {
             throw new Error("No valid images were uploaded");
         }
 
-        const car = await db.car.create({
+        const car = await prisma.car.create({
             data: {
                 id: carId,
                 make: carData.make,
@@ -200,6 +205,7 @@ export const addCar = async ({ carData, images }) => {
         // revalidatePath("/admin/cars");
 
         res.json({
+            car,
             success: true,
         });
     } catch (error) {
