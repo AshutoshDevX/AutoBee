@@ -63,6 +63,7 @@ export function HomeSearch() {
             setSearchImage(file);
 
             const reader = new FileReader();
+
             reader.onloadend = () => {
                 setImagePreview(reader.result);
                 setIsUploading(false);
