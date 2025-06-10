@@ -1,15 +1,21 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { v4 as uuidv4 } from 'uuid';
 import { createClient } from '@supabase/supabase-js';
+import prisma from "../lib/prisma.js";
+import fs from 'fs/promises';
 
+const fileToBase64 = async (file) => {
+    const buffer = file.split(',')[1];
 
-const fileToBase64 = (file) => {
-    const bytes = file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
     return buffer.toString("base64");
-}
+};
 export const processCarImageWithAI = async (req, res) => {
+    const { uploadedAiImage } = req.body;
+
+
+
     try {
+
         if (!process.env.GEMINI_API_KEY) {
             throw new Error("Gemini API key is not configured")
         }
@@ -18,12 +24,11 @@ export const processCarImageWithAI = async (req, res) => {
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 
-        const base64Image = fileToBase64()
-
+        const base64Image = await fileToBase64(uploadedAiImage)
         const imagePart = {
             inlineData: {
                 data: base64Image,
-                mimeType: file.type,
+                mimeType: "image/webp",
             },
         };
         const prompt = `
@@ -58,9 +63,10 @@ export const processCarImageWithAI = async (req, res) => {
       Only respond with the JSON object, nothing else.
     `;
 
-        const result = model.generateContent([imagePart, prompt]);
+        const result = await model.generateContent([imagePart, prompt]);
         const response = result.response;
         const text = response.text();
+
         const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
 
 
