@@ -28,6 +28,25 @@ export const useFetch = () => {
             setLoading(false);
         }
     };
+    const fnAi = async (uploadedAiImage) => {
+        setLoading(true);
+        setError(null);
+        console.log(uploadedAiImage)
+        try {
+            const response = await axios.post('http://localhost:3000/api/car/processcar', {
+                uploadedAiImage
+            });
 
-    return { data, loading, error, fn, setData };
+            console.log(response)
+            setData(response);
+            setError(null);
+        } catch (error) {
+            setError(error);
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { data, loading, error, fn, fnAi, setData };
 };
