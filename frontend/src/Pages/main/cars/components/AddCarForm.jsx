@@ -1,6 +1,3 @@
-
-
-
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
@@ -9,7 +6,6 @@ import * as z from "zod";
 import { toast } from "sonner";
 import { Camera, ImagePlus, Loader2, X, Upload } from "lucide-react";
 import { useDropzone } from "react-dropzone";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -30,8 +26,9 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
-// import { addCar, processCarImageWithAI } from "@/actions/cars";
-// import useFetch from "@/hooks/use-fetch";
+import { useFetch } from "../../../../hooks/useFetch";
+import { useAuth } from "@clerk/clerk-react";
+
 
 
 
@@ -79,6 +76,9 @@ export const AddCarForm = () => {
     const [activeTab, setActiveTab] = useState("ai");
     const [imageError, setImageError] = useState("");
 
+
+
+    const { userId, isSignedIn, isLoaded } = useAuth();
     // Initialize form with react-hook-form and zod
     const {
         register,
@@ -107,66 +107,66 @@ export const AddCarForm = () => {
     });
 
     // Custom hooks for API calls
-    // const {
-    //     loading: addCarLoading,
-    //     fn: addCarFn,
-    //     data: addCarResult,
-    // } = useFetch(addCar);
+    const {
+        loading: addCarLoading,
+        fn: addCarFn,
+        data: addCarResult,
+    } = useFetch();
 
-    // const {
-    //     loading: processImageLoading,
-    //     fn: processImageFn,
-    //     data: processImageResult,
-    //     error: processImageError,
-    // } = useFetch(processCarImageWithAI);
+    const {
+        loading: processImageLoading,
+        fn: processImageFn,
+        data: processImageResult,
+        error: processImageError,
+    } = useFetch();
 
-    // Handle successful car addition
-    // useEffect(() => {
-    //     if (addCarResult?.success) {
-    //         toast.success("Car added successfully");
-    //         navigate("/admin/cars");
-    //     }
-    // }, [addCarResult, navigate]);
 
-    // useEffect(() => {
-    //     if (processImageError) {
-    //         toast.error(processImageError.message || "Failed to upload car");
-    //     }
-    // }, [processImageError]);
+    useEffect(() => {
+        if (addCarResult?.data?.success) {
+            toast.success("Car added successfully");
+            navigate("/admin/cars");
+        }
+    }, [addCarResult, addCarLoading]);
 
-    // Handle successful AI processing
-    // useEffect(() => {
-    //     if (processImageResult?.success) {
-    //         const carDetails = processImageResult.data;
+    useEffect(() => {
+        if (processImageError) {
+            toast.error(processImageError.message || "Failed to upload car");
+        }
+    }, [processImageError]);
 
-    //         // Update form with AI results
-    //         setValue("make", carDetails.make);
-    //         setValue("model", carDetails.model);
-    //         setValue("year", carDetails.year.toString());
-    //         setValue("color", carDetails.color);
-    //         setValue("bodyType", carDetails.bodyType);
-    //         setValue("fuelType", carDetails.fuelType);
-    //         setValue("price", carDetails.price);
-    //         setValue("mileage", carDetails.mileage);
-    //         setValue("transmission", carDetails.transmission);
-    //         setValue("description", carDetails.description);
 
-    //         // Add the image to the uploaded images
-    //         const reader = new FileReader();
-    //         reader.onload = (e) => {
-    //             setUploadedImages((prev) => [...prev, e.target.result]);
-    //         };
-    //         reader.readAsDataURL(uploadedAiImage);
+    useEffect(() => {
+        if (processImageResult?.success) {
+            const carDetails = processImageResult.data;
 
-    //         toast.success("Successfully extracted car details", {
-    //             description: `Detected ${carDetails.year} ${carDetails.make} ${carDetails.model
-    //                 } with ${Math.round(carDetails.confidence * 100)}% confidence`,
-    //         });
+            // Update form with AI results
+            setValue("make", carDetails.make);
+            setValue("model", carDetails.model);
+            setValue("year", carDetails.year.toString());
+            setValue("color", carDetails.color);
+            setValue("bodyType", carDetails.bodyType);
+            setValue("fuelType", carDetails.fuelType);
+            setValue("price", carDetails.price);
+            setValue("mileage", carDetails.mileage);
+            setValue("transmission", carDetails.transmission);
+            setValue("description", carDetails.description);
 
-    //         // Switch to manual tab for the user to review and fill in missing details
-    //         setActiveTab("manual");
-    //     }
-    // }, [processImageResult, setValue, uploadedAiImage]);
+            // Add the image to the uploaded images
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setUploadedImages((prev) => [...prev, e.target.result]);
+            };
+            reader.readAsDataURL(uploadedAiImage);
+
+            toast.success("Successfully extracted car details", {
+                description: `Detected ${carDetails.year} ${carDetails.make} ${carDetails.model
+                    } with ${Math.round(carDetails.confidence * 100)}% confidence`,
+            });
+
+            // Switch to manual tab for the user to review and fill in missing details
+            setActiveTab("manual");
+        }
+    }, [processImageResult, setValue, uploadedAiImage]);
 
     // Process image with Gemini AI
     const processWithAI = async () => {
@@ -216,7 +216,6 @@ export const AddCarForm = () => {
             }
             return true;
         });
-
         if (validFiles.length === 0) return;
 
         // Simulate upload progress
@@ -234,7 +233,6 @@ export const AddCarForm = () => {
                     const reader = new FileReader();
                     reader.onload = (e) => {
                         newImages.push(e.target.result);
-
                         // When all images are processed
                         if (newImages.length === validFiles.length) {
                             setUploadedImages((prev) => [...prev, ...newImages]);
@@ -285,6 +283,7 @@ export const AddCarForm = () => {
 
         // Call the addCar function with our useFetch hook
         await addCarFn({
+            userId,
             carData,
             images: uploadedImages,
         });
@@ -599,7 +598,7 @@ export const AddCarForm = () => {
                                     </div>
 
                                     {/* Image Previews */}
-                                    {/* {uploadedImages.length > 0 && (
+                                    {uploadedImages.length > 0 && (
                                         <div className="mt-4">
                                             <h3 className="text-sm font-medium mb-2">
                                                 Uploaded Images ({uploadedImages.length})
@@ -607,7 +606,7 @@ export const AddCarForm = () => {
                                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                                                 {uploadedImages.map((image, index) => (
                                                     <div key={index} className="relative group">
-                                                        <Image
+                                                        < img
                                                             src={image}
                                                             alt={`Car image ${index + 1}`}
                                                             height={50}
@@ -628,10 +627,10 @@ export const AddCarForm = () => {
                                                 ))}
                                             </div>
                                         </div>
-                                    )} */}
+                                    )}
                                 </div>
 
-                                {/* <Button
+                                <Button
                                     type="submit"
                                     className="w-full md:w-auto"
                                     disabled={addCarLoading}
@@ -644,13 +643,13 @@ export const AddCarForm = () => {
                                     ) : (
                                         "Add Car"
                                     )}
-                                </Button> */}
+                                </Button>
                             </form>
                         </CardContent>
                     </Card>
                 </TabsContent>
 
-                {/* <TabsContent value="ai" className="mt-6">
+                <TabsContent value="ai" className="mt-6">
                     <Card>
                         <CardHeader>
                             <CardTitle>AI-Powered Car Details Extraction</CardTitle>
@@ -754,7 +753,7 @@ export const AddCarForm = () => {
                             </div>
                         </CardContent>
                     </Card>
-                </TabsContent> */}
+                </TabsContent>
             </Tabs>
         </div>
     );
