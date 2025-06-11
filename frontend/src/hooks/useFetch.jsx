@@ -18,7 +18,6 @@ export const useFetch = () => {
                 images
             });
 
-            console.log(response)
             setData(response);
             setError(null);
         } catch (error) {
@@ -31,13 +30,10 @@ export const useFetch = () => {
     const fnAi = async (uploadedAiImage) => {
         setLoading(true);
         setError(null);
-        console.log(uploadedAiImage)
         try {
             const response = await axios.post('http://localhost:3000/api/car/processcar', {
                 uploadedAiImage
             });
-
-            console.log(response)
             setData(response);
             setError(null);
         } catch (error) {

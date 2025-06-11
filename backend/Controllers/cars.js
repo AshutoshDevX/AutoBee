@@ -2,18 +2,13 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { v4 as uuidv4 } from 'uuid';
 import { createClient } from '@supabase/supabase-js';
 import prisma from "../lib/prisma.js";
-import fs from 'fs/promises';
 
 const fileToBase64 = async (file) => {
     const buffer = file.split(',')[1];
-
     return buffer.toString("base64");
 };
 export const processCarImageWithAI = async (req, res) => {
     const { uploadedAiImage } = req.body;
-
-
-
     try {
 
         if (!process.env.GEMINI_API_KEY) {
@@ -28,7 +23,7 @@ export const processCarImageWithAI = async (req, res) => {
         const imagePart = {
             inlineData: {
                 data: base64Image,
-                mimeType: "image/webp",
+                mimeType: "image/jpg",
             },
         };
         const prompt = `
