@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { v4 as uuidv4 } from 'uuid';
 import { createClient } from '@supabase/supabase-js';
 import prisma from "../lib/prisma.js";
-
+import { serializeCarData } from "../lib/helper.js";
 const fileToBase64 = async (file) => {
     const buffer = file.split(',')[1];
     return buffer.toString("base64");
@@ -173,7 +173,7 @@ export const addCar = async (req, res) => {
             }
 
 
-            const publicUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/car-images/${filePath}`; // disable cache in config
+            const publicUrl = `${process.env.VITE_SUPABASE_URL}/storage/v1/object/public/car-images/${filePath}`; // disable cache in config
 
             imageUrls.push(publicUrl);
         }
@@ -212,4 +212,176 @@ export const addCar = async (req, res) => {
     } catch (error) {
         throw new Error("Error adding car:" + error.message);
     }
-}  
+}
+
+
+export const getCars = async (req, res) => {
+    try {
+        const { userId, search } = req.body;
+
+        if (!userId) throw new Error("Unauthorized");
+
+
+        const user = await prisma.user.findUnique({
+            where: { clerkUserId: userId },
+        })
+
+
+        if (!user) throw new Error("User not found")
+
+
+        let where = {}
+
+        if (search) {
+            where.OR = [
+                { make: { contains: search, mode: "insensitive" } },
+                { model: { contains: search, mode: "insensitive" } },
+                { color: { contains: search, mode: "insensitive" } },
+            ]
+        }
+
+
+        const cars = await prisma.car.findMany({
+            where,
+            orderBy: { createdAt: "desc" },
+        });
+
+
+        const serializedCars = cars.map(serializeCarData);
+
+        res.json({
+            success: true,
+            data: serializedCars,
+        })
+
+
+    } catch (err) {
+        console.log("Error fetching cars:", err);
+
+        res.status(501).json({
+            success: false,
+            err: err.message
+        })
+    }
+}
+
+
+export const deleteCar = async (req, res) => {
+    try {
+        const data = req.body;
+        const { userId, id } = data;
+
+        if (!userId) throw new Error("Unauthorized");
+
+
+        const user = await prisma.user.findUnique({
+            where: { clerkUserId: userId },
+        })
+
+
+        if (!user) throw new Error("User not found");
+
+
+        const car = await prisma.car.findUnique({
+            where: { id },
+            select: { images: true },
+        });
+
+        if (!car) {
+            return {
+                success: false,
+                error: "Car not found",
+            };
+        }
+
+        await prisma.car.delete({
+            where: { id },
+        });
+
+
+        try {
+            const supabase = createClient(
+                process.env.VITE_SUPABASE_URL,
+                process.env.VITE_SUPABASE_ANON_KEY
+            );
+
+
+
+            const filePaths = car.images
+                .map((imageUrl) => {
+                    const url = new URL(imageUrl);
+                    const pathMatch = url.pathname.match(/\/car-images\/(.*)/);
+                    return pathMatch ? pathMatch[1] : null;
+                }).filter(Boolean);
+
+
+            if (filePaths.length > 0) {
+                const { error } = await supabase.storage.from("car-images").remove(filePaths);
+
+                if (error) {
+                    console.error("Error deleting images:", error);
+                }
+            }
+        } catch (storageError) {
+            console.error("Error with storage operations:", storageError);
+        }
+
+        res.json({
+            success: true,
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(501).json({
+            success: false,
+            error: error.message
+        })
+    }
+
+}
+
+
+export const updateCarStatus = async (req, res) => {
+    try {
+        const { status, featured, userId, id } = req.body;
+
+        if (!userId) throw new Error("Unauthorized");
+
+
+        const user = await prisma.user.findUnique({
+            where: { clerkUserId: userId },
+        })
+
+        if (!user) {
+            return res.status(404).json({
+                message: "user not found"
+            })
+        }
+
+
+        const updateData = {};
+
+        if (status !== undefined) {
+            updateData.status = status;
+        }
+
+        if (featured !== undefined) {
+            updateData.featured = featured;
+        }
+
+
+        await prisma.car.update({
+            where: { id },
+            data: updateData,
+        });
+
+        res.json({
+            success: true,
+        })
+    } catch (error) {
+        console.error("Error updating car status:", error);
+        res.status(501).json({
+            success: false,
+            error: error.message,
+        });
+    }
+}
