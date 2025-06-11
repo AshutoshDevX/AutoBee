@@ -137,8 +137,7 @@ export const AddCarForm = () => {
 
     useEffect(() => {
         if (processImageResult?.data?.success) {
-            const carDetails = processImageResult.data;
-
+            const carDetails = processImageResult.data.data;
             // Update form with AI results
             setValue("make", carDetails.make);
             setValue("model", carDetails.model);
@@ -153,10 +152,13 @@ export const AddCarForm = () => {
 
             // Add the image to the uploaded images
             const reader = new FileReader();
-            reader.onload = (e) => {
-                setUploadedImages((prev) => [...prev, e.target.result]);
-            };
-            reader.readAsDataURL(uploadedAiImage);
+            if (uploadedAiImage) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    setUploadedImages((prev) => [...prev, e.target.result]);
+                };
+                reader.readAsDataURL(uploadedAiImage);
+            }
 
             toast.success("Successfully extracted car details", {
                 description: `Detected ${carDetails.year} ${carDetails.make} ${carDetails.model
@@ -175,7 +177,7 @@ export const AddCarForm = () => {
             return;
         }
 
-        await processImageFn(uploadedAiImage);
+        await processImageFn(imagePreview);
     };
 
     // Handle AI image upload with Dropzone
@@ -189,12 +191,11 @@ export const AddCarForm = () => {
         }
 
         setUploadedAiImage(file);
+
         const reader = new FileReader();
         reader.onload = (e) => {
-            console.log(e.target.result)
             setImagePreview(e.target.result);
         };
-        console.log(reader.readAsDataURL(file))
         reader.readAsDataURL(file);
     }, []);
 
@@ -674,7 +675,9 @@ export const AddCarForm = () => {
                                                     size="sm"
                                                     onClick={() => {
                                                         setImagePreview(null);
+
                                                         setUploadedAiImage(null);
+
                                                     }}
                                                 >
                                                     Remove
