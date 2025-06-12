@@ -18,7 +18,6 @@ export const useFetch = () => {
                 images
             });
 
-
             setData(response);
             setError(null);
         } catch (error) {
@@ -108,5 +107,84 @@ export const useFetch = () => {
             setLoading(false);
         }
     };
-    return { data, loading, error, fn, fnAi, fetchCars, updateCarStatusFn, deleteCarFn };
+
+
+    const fetchDealershipInfo = async (userId) => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await axios.get(`http://localhost:3000/api/settings/${userId}`);
+
+            setData(response.data);
+            setError(null);
+        } catch (error) {
+            setError(error);
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const fetchUsers = async (userId) => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await axios.get(`http://localhost:3000/api/settings/users/${userId}`);
+
+            setData(response.data);
+            setError(null);
+        } catch (error) {
+            setError(error);
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const saveHours = async (userId, workingHours) => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await axios.post(`http://localhost:3000/api/settings/workinghours`, {
+                userId,
+                workingHours
+            });
+
+            setData(response.data);
+            setError(null);
+        } catch (error) {
+            setError(error);
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const updateRole = async (userId, role) => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await axios.put(`http://localhost:3000/api/settings/updaterole`, {
+                userId,
+                role
+            });
+
+            setData(response.data);
+            setError(null);
+        } catch (error) {
+            setError(error);
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    return {
+        data, loading, error, fn, fnAi, fetchCars, updateCarStatusFn, deleteCarFn, fetchDealershipInfo, fetchUsers, saveHours,
+        updateRole,
+    };
 };
