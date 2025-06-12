@@ -14,10 +14,10 @@ export const Footer = () => {
                 <div>
                     <h3 className="text-lg font-semibold text-white mb-2">Quick Links</h3>
                     <ul className="space-y-1 text-sm">
-                        <li><a href="/about" className="hover:text-white">About Us</a></li>
-                        <li><a href="/pricing" className="hover:text-white">Pricing</a></li>
-                        <li><a href="/blog" className="hover:text-white">Blog</a></li>
-                        <li><a href="/contact" className="hover:text-white">Contact</a></li>
+                        <li><a href="/" className="hover:text-white">About Us</a></li>
+                        <li><a href="/" className="hover:text-white">Pricing</a></li>
+                        <li><a href="/" className="hover:text-white">Blog</a></li>
+                        <li><a href="/" className="hover:text-white">Contact</a></li>
                     </ul>
                 </div>
 
@@ -25,9 +25,9 @@ export const Footer = () => {
                 <div>
                     <h3 className="text-lg font-semibold text-white mb-2">Services</h3>
                     <ul className="space-y-1 text-sm">
-                        <li><a href="/analytics" className="hover:text-white">Car Market Analysis</a></li>
-                        <li><a href="/trade" className="hover:text-white">Smart Trading Tools</a></li>
-                        <li><a href="/valuation" className="hover:text-white">Instant Car Valuation</a></li>
+                        <li><a href="/" className="hover:text-white">Car Market Analysis</a></li>
+                        <li><a href="/" className="hover:text-white">Smart Trading Tools</a></li>
+                        <li><a href="/" className="hover:text-white">Instant Car Valuation</a></li>
                     </ul>
                 </div>
 
