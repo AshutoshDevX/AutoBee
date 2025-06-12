@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { useFetch } from "../../../../hooks/useFetch";
 import {
     Save,
     Clock,
@@ -40,9 +41,8 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+import { useAuth } from "@clerk/clerk-react";
 
-
-const useFetch = "";
 // Day names for display
 const DAYS = [
     { value: "MONDAY", label: "Monday" },
@@ -64,6 +64,7 @@ export const SettingsForm = () => {
         }))
     );
 
+    const { userId } = useAuth();
     const [userSearch, setUserSearch] = useState("");
     const [confirmAdminDialog, setConfirmAdminDialog] = useState(false);
     const [userToPromote, setUserToPromote] = useState(null);
@@ -73,36 +74,36 @@ export const SettingsForm = () => {
     // Custom hooks for API calls
     const {
         loading: fetchingSettings,
-        fn: fetchDealershipInfo,
+        fetchDealershipInfo: fetchDealershipInfo,
         data: settingsData,
         error: settingsError,
-    } = useFetch(getDealershipInfo);
+    } = useFetch();
 
     const {
         loading: savingHours,
-        fn: saveHours,
+        saveHours: saveHours,
         data: saveResult,
         error: saveError,
-    } = useFetch(saveWorkingHours);
+    } = useFetch();
 
     const {
         loading: fetchingUsers,
-        fn: fetchUsers,
+        fetchUsers: fetchUsers,
         data: usersData,
         error: usersError,
-    } = useFetch(getUsers);
+    } = useFetch();
 
     const {
         loading: updatingRole,
-        fn: updateRole,
+        updateRole: updateRole,
         data: updateRoleResult,
         error: updateRoleError,
-    } = useFetch(updateUserRole);
+    } = useFetch();
 
     // Fetch settings and users on component mount
     useEffect(() => {
-        fetchDealershipInfo();
-        fetchUsers();
+        fetchDealershipInfo(userId);
+        fetchUsers(userId);
     }, []);
 
     // Set working hours when settings data is fetched
@@ -185,7 +186,7 @@ export const SettingsForm = () => {
         setWorkingHours(updatedHours);
     };
 
-    // Save working hours
+    //     // Save working hours
     const handleSaveHours = async () => {
         await saveHours(workingHours);
     };
