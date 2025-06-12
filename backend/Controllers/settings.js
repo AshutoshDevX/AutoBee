@@ -1,10 +1,10 @@
-import prisma from "../lib/prisma";
+import prisma from "../lib/prisma.js";
 
 
 
-export const getDealerShipInfo = async () => {
+export const getDealerShipInfo = async (req, res) => {
     try {
-        const { userId } = req.body;
+        const { userId } = req.params;
         if (!userId) {
             return res.status(401).json({
                 message: "Unauthorized"
@@ -113,7 +113,7 @@ export const getDealerShipInfo = async () => {
 }
 
 
-export const saveWorkingHours = async () => {
+export const saveWorkingHours = async (req, res) => {
     try {
         const { userId, workingHours } = req.body;
         if (!userId) {
@@ -165,9 +165,9 @@ export const saveWorkingHours = async () => {
 }
 
 
-export const getUsers = async () => {
+export const getUsers = async (req, res) => {
     try {
-        const { userId } = req.body;
+        const { userId } = req.params;
         if (!userId) throw new Error("Unauthorized");
 
 
@@ -203,7 +203,7 @@ export const getUsers = async () => {
 }
 
 
-export const updateUserRole = async () => {
+export const updateUserRole = async (req, res) => {
     try {
         const { userId: adminId, role } = req.body;
         if (!adminId) {
