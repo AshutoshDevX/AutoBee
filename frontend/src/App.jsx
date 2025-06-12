@@ -1,8 +1,6 @@
 import { Route, Routes, useLocation } from "react-router"
 import { Home } from "./Pages/Home"
 import "./App.css"
-// import { useContext } from "react"
-// import { AdminContext } from "./components/AdminContext"
 import { Footer } from './components/Footer.jsx'
 import { Header } from './components/Header.jsx'
 import { SignInPage } from './auth/SignInPage.jsx'
@@ -16,7 +14,6 @@ import { Settings } from "./Pages/main/Settings/Settings.jsx"
 import { TestDrive } from "./Pages/main/test-drive/TestDrive.jsx"
 import { AddCarPage } from "./Pages/main/cars/components/AddCarPage.jsx"
 function App() {
-  // const [isAdminPage] = useContext(AdminContext);
   const { pathname } = useLocation();
   return (
     <>
