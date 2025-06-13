@@ -258,7 +258,7 @@ export const getCars = async (req, res) => {
     } catch (err) {
         console.log("Error fetching cars:", err);
 
-        res.status(501).json({
+        res.status(500).json({
             success: false,
             err: err.message
         })
@@ -331,7 +331,7 @@ export const deleteCar = async (req, res) => {
         })
     } catch (error) {
         console.log(error)
-        res.status(501).json({
+        res.status(500).json({
             success: false,
             error: error.message
         })
@@ -379,7 +379,7 @@ export const updateCarStatus = async (req, res) => {
         })
     } catch (error) {
         console.error("Error updating car status:", error);
-        res.status(501).json({
+        res.status(500).json({
             success: false,
             error: error.message,
         });
