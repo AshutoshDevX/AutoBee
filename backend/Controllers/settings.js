@@ -11,9 +11,12 @@ export const getDealerShipInfo = async (req, res) => {
             })
         }
 
+
         const user = await prisma.user.findUnique({
             where: { clerkUserId: userId },
         })
+
+
 
         if (!user) {
             return res.status(404).json({
@@ -106,7 +109,7 @@ export const getDealerShipInfo = async (req, res) => {
         })
     } catch (error) {
         console.log(error);
-        res.status(501).json({
+        res.status(500).json({
             message: "Internal server error"
         })
     }
@@ -125,6 +128,7 @@ export const saveWorkingHours = async (req, res) => {
         const user = await prisma.user.findUnique({
             where: { clerkUserId: userId },
         })
+
 
         if (!user || user.role !== "ADMIN") {
             return res.status(404).json({
@@ -158,7 +162,7 @@ export const saveWorkingHours = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(501).json({
+        res.status(500).json({
             message: "Internal server error"
         })
     }
@@ -196,7 +200,7 @@ export const getUsers = async (req, res) => {
         });
     } catch (error) {
         console.log(error)
-        res.status(501).json({
+        res.status(500).json({
             message: "Internal server error"
         })
     }
@@ -205,7 +209,9 @@ export const getUsers = async (req, res) => {
 
 export const updateUserRole = async (req, res) => {
     try {
-        const { userId: adminId, role } = req.body;
+        const { clerkUserId: adminId, userId, role } = req.body;
+
+
         if (!adminId) {
             return res.status(401).json({
                 message: "Unauthorized"
@@ -215,6 +221,9 @@ export const updateUserRole = async (req, res) => {
         const adminUser = await prisma.user.findUnique({
             where: { clerkUserId: adminId },
         });
+
+
+
 
         if (!adminUser || adminUser.role !== "ADMIN") {
             return res.status(401).json({
@@ -232,7 +241,7 @@ export const updateUserRole = async (req, res) => {
         })
     } catch (error) {
         console.log(error)
-        res.status(501).json({
+        res.status(500).json({
             message: "Internal server error"
         })
     }
