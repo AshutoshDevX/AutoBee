@@ -1,5 +1,5 @@
-import { serializeCarData } from "../lib/helper";
-import prisma from "../lib/prisma";
+import { serializeCarData } from "../lib/helper.js";
+import prisma from "../lib/prisma.js";
 
 
 export async function getCarFilters(req, res) {
