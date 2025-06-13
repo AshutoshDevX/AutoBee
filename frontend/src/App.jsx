@@ -7,12 +7,12 @@ import { SignInPage } from './auth/SignInPage.jsx'
 import { SignUpPage } from './auth/SignUpPage.jsx'
 import { Error } from './Pages/Error.jsx'
 import { Toaster } from 'sonner';
-import { Cars } from "./Pages/main/Cars/Cars.jsx"
+import { Cars } from "./Pages/Admin/cars/Cars.jsx"
 import { AdminLayout } from './Pages/Admin/AdminLayout.jsx'
 import { AdminPage } from "./Pages/Admin/AdminPage.jsx"
-import { Settings } from "./Pages/main/Settings/Settings.jsx"
+import { Settings } from "./Pages/Admin/settings/Settings.jsx"
 import { TestDrive } from "./Pages/Admin/test-drive/TestDrive.jsx"
-import { AddCarPage } from "./Pages/main/cars/components/AddCarPage.jsx"
+import { AddCarPage } from "./Pages/Admin/cars/components/AddCarPage.jsx"
 function App() {
   const { pathname } = useLocation();
   return (
