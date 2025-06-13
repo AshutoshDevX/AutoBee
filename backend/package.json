@@ -11,6 +11,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@arcjet/inspect": "^1.0.0-beta.8",
+    "@arcjet/node": "^1.0.0-beta.8",
     "@google/generative-ai": "^0.24.1",
     "@prisma/client": "^6.9.0",
     "@supabase/supabase-js": "^2.50.0",
