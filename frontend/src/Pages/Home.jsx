@@ -2,7 +2,7 @@ import { HomeSearch } from '../components/HomeSearch'
 import { Button } from "@/components/ui/button"
 import { Calendar, Car, ChevronRight, Shield } from 'lucide-react'
 import { Link } from 'react-router'
-import { bodyTypes, carMakes, faqItems, featuredCars } from '../lib/data'
+import { bodyTypes, carMakes, faqItems } from '../lib/data'
 import { CarCard } from '../components/CarCard'
 import {
     Accordion,
@@ -11,17 +11,34 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import { SignedOut } from '@clerk/clerk-react'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { AdminContext } from '../components/AdminContext'
 import { useEffect } from 'react'
-
+import axios from 'axios'
 
 export const Home = () => {
-
+    const [featuredCars, setFeaturedCars] = useState(null);
     const [, setIsAdminPage] = useContext(AdminContext);
     useEffect(() => {
         setIsAdminPage(false)
     }, [])
+
+
+
+
+    useEffect(() => {
+        try {
+            const getData = async () => {
+                const response = await axios.get("http://localhost:3000/api");
+                setFeaturedCars(response.data.cars);
+            }
+
+            getData();
+        } catch (error) {
+            console.log(error)
+        }
+    }, [])
+
     return (
         <div>
             <div className="flex flex-col">
@@ -48,7 +65,7 @@ export const Home = () => {
                             </Button>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {featuredCars.map((car) => {
+                            {featuredCars && featuredCars.map((car) => {
                                 return <CarCard key={car.id} car={car} />
                             })}
                         </div>

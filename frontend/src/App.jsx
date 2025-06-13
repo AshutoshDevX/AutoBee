@@ -11,7 +11,7 @@ import { Cars } from "./Pages/main/Cars/Cars.jsx"
 import { AdminLayout } from './Pages/Admin/AdminLayout.jsx'
 import { AdminPage } from "./Pages/Admin/AdminPage.jsx"
 import { Settings } from "./Pages/main/Settings/Settings.jsx"
-import { TestDrive } from "./Pages/main/test-drive/TestDrive.jsx"
+import { TestDrive } from "./Pages/Admin/test-drive/TestDrive.jsx"
 import { AddCarPage } from "./Pages/main/cars/components/AddCarPage.jsx"
 function App() {
   const { pathname } = useLocation();
