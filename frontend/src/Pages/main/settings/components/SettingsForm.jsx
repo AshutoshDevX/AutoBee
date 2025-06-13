@@ -194,13 +194,15 @@ export const SettingsForm = () => {
     // Make user admin
     const handleMakeAdmin = async () => {
         if (!userToPromote) return;
-        await updateRole(userToPromote.id, "ADMIN");
+        console.log(userToPromote)
+        await updateRole(userId, userToPromote.id, "ADMIN");
     };
 
     // Remove admin privileges
     const handleRemoveAdmin = async () => {
         if (!userToDemote) return;
-        await updateRole(userToDemote.id, "USER");
+        console.log(userToDemote)
+        await updateRole(userId, userToDemote.id, "USER");
     };
 
     // Filter users by search term
