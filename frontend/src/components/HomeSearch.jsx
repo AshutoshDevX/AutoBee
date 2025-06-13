@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router";
+import { useFetch } from "../hooks/useFetch";
 
 
 export function HomeSearch() {
@@ -17,38 +18,38 @@ export function HomeSearch() {
     const [isUploading, setIsUploading] = useState(false);
     const [isImageSearchActive, setIsImageSearchActive] = useState(false);
 
-    // Use the useFetch hook for image processing
-    // const {
-    //     loading: isProcessing,
-    //     fn: processImageFn,
-    //     data: processResult,
-    //     error: processError,
-    // } = useFetch(processImageSearch);
 
-    // Handle process result and errors with useEffect
-    // useEffect(() => {
-    //     if (processResult?.success) {
-    //         const params = new URLSearchParams();
+    const {
+        loading: isProcessing,
+        processImageFn: processImageFn,
+        data: processResult,
+        error: processError,
+    } = useFetch();
 
-    //         // Add extracted params to the search
-    //         if (processResult.data.make) params.set("make", processResult.data.make);
-    //         if (processResult.data.bodyType)
-    //             params.set("bodyType", processResult.data.bodyType);
-    //         if (processResult.data.color)
-    //             params.set("color", processResult.data.color);
 
-    //         // Redirect to search results
-    //         navigate(`/cars?${params.toString()}`);
-    //     }
-    // }, [processResult, router]);
+    useEffect(() => {
+        if (processResult?.success) {
+            const params = new URLSearchParams();
 
-    // useEffect(() => {
-    //     if (processError) {
-    //         toast.error(
-    //             "Failed to analyze image: " + (processError.message || "Unknown error")
-    //         );
-    //     }
-    // }, [processError]);
+            // Add extracted params to the search
+            if (processResult.data.make) params.set("make", processResult.data.make);
+            if (processResult.data.bodyType)
+                params.set("bodyType", processResult.data.bodyType);
+            if (processResult.data.color)
+                params.set("color", processResult.data.color);
+
+            // Redirect to search results
+            navigate(`/cars?${params.toString()}`);
+        }
+    }, [processResult, navigate]);
+
+    useEffect(() => {
+        if (processError) {
+            toast.error(
+                "Failed to analyze image: " + (processError.message || "Unknown error")
+            );
+        }
+    }, [processError]);
 
     // Handle image upload with react-dropzone
     const onDrop = (acceptedFiles) => {
@@ -104,7 +105,6 @@ export function HomeSearch() {
             toast.error("Please upload an image first");
             return;
         }
-
         // Use the processImageFn from useFetch hook
         await processImageFn(searchImage);
     };
@@ -191,11 +191,11 @@ export function HomeSearch() {
                                 disabled={isUploading}
                             >
                                 Search with this Image
-                                {/* {isUploading
+                                {isUploading
                                     ? "Uploading..."
                                     : isProcessing
                                         ? "Analyzing image..."
-                                        : "Search with this Image"} */}
+                                        : "Search with this Image"}
                             </Button>
                         )}
                     </form>
