@@ -163,12 +163,13 @@ export const useFetch = () => {
         }
     }
 
-    const updateRole = async (userId, role) => {
+    const updateRole = async (clerkUserId, userId, role) => {
         setLoading(true);
         setError(null);
 
         try {
             const response = await axios.put(`http://localhost:3000/api/settings/updaterole`, {
+                clerkUserId,
                 userId,
                 role
             });
@@ -177,6 +178,7 @@ export const useFetch = () => {
             setError(null);
         } catch (error) {
             setError(error);
+            console.log(error)
             toast.error(error.message);
         } finally {
             setLoading(false);
