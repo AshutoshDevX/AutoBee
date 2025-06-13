@@ -185,8 +185,29 @@ export const useFetch = () => {
         }
     }
 
+    const processImageFn = async (imageFile) => {
+        setLoading(true);
+        setError(null);
+
+        const formData = new FormData();
+        formData.append("image", imageFile);
+
+        try {
+            const response = await axios.post("http://localhost:3000/api", formData);
+
+            setData(response.data);
+            setError(null);
+        } catch (error) {
+            setError(error);
+            console.log(error)
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return {
         data, loading, error, fn, fnAi, fetchCars, updateCarStatusFn, deleteCarFn, fetchDealershipInfo, fetchUsers, saveHours,
-        updateRole,
+        updateRole, processImageFn
     };
 };
