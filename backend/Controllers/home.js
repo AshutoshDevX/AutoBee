@@ -1,5 +1,7 @@
-import prisma from "../lib/prisma";
-import { aj } from "../lib/arcjet";
+import prisma from "../lib/prisma.js";
+import { aj } from "../lib/arcjet.js";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { serializeCarData } from "../lib/helper.js";
 
 
 export async function getFeaturedCars(req, res) {
@@ -28,10 +30,14 @@ export async function getFeaturedCars(req, res) {
 }
 
 
+
 export async function processImageSearch(req, res) {
     try {
 
         // Check rate limit
+        const file = req.file;
+
+
         const decision = await aj.protect(req, {
             requested: 1, // Specify how many tokens to consume
         });
@@ -47,12 +53,12 @@ export async function processImageSearch(req, res) {
                     },
                 });
 
-                res.status(429).json({
+                return res.status(429).json({
                     message: "Too many requests"
                 })
             }
 
-            res.status(403).json({
+            return res.status(403).json({
                 message: "Request blocked"
             })
         }
@@ -70,13 +76,13 @@ export async function processImageSearch(req, res) {
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         // Convert image file to base64
-        const base64Image = await fileToBase64(file);
+        const base64Image = file.buffer.toString("base64");
 
         // Create image part for the model
         const imagePart = {
             inlineData: {
                 data: base64Image,
-                mimeType: file.type,
+                mimeType: file.mimetype,
             },
         };
 
@@ -101,7 +107,7 @@ export async function processImageSearch(req, res) {
 
         // Get response from Gemini
         const result = await model.generateContent([imagePart, prompt]);
-        const response = await result.response;
+        const response = result.response;
         const text = response.text();
         const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
 
@@ -126,3 +132,4 @@ export async function processImageSearch(req, res) {
         throw new Error("AI Search error:" + error.message);
     }
 }
+
