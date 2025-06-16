@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router'
-import AutobeeLogo from '../assets/AutobeeLogo.png'
+import AutobeeLogo from '../assets/AutoBeeLogo.png'
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/clerk-react';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, CarFront, Heart, Layout } from 'lucide-react';
