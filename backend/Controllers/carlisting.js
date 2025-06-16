@@ -191,8 +191,7 @@ export async function getCars(req, res) {
  */
 export async function toggleSavedCar(req, res) {
     try {
-        const { carId, userId } = req.params;
-
+        const { carId, userId } = req.query;
         if (!userId) throw new Error("Unauthorized");
 
         const user = await prisma.user.findUnique({
@@ -234,12 +233,12 @@ export async function toggleSavedCar(req, res) {
                 },
             });
 
-            revalidatePath(`/saved-cars`);
-            return {
+
+            return res.json({
                 success: true,
                 saved: false,
                 message: "Car removed from favorites",
-            };
+            });
         }
 
         // If car is not saved, add it
@@ -250,12 +249,12 @@ export async function toggleSavedCar(req, res) {
             },
         });
 
-        revalidatePath(`/saved-cars`);
-        return {
+
+        res.json({
             success: true,
             saved: true,
             message: "Car added to favorites",
-        };
+        });
     } catch (error) {
         console.log(error)
         res.status(500).json({
@@ -270,7 +269,9 @@ export async function toggleSavedCar(req, res) {
 export async function getCarById(req, res) {
     try {
         // Get current user if authenticated
-        const { carId, userId } = req.params;
+        const { carId, userId } = req.query;
+
+        console.log(carId);
 
         let prismaUser = null;
 
@@ -286,10 +287,10 @@ export async function getCarById(req, res) {
         });
 
         if (!car) {
-            return {
+            res.status(404).json({
                 success: false,
                 error: "Car not found",
-            };
+            });
         }
 
         // Check if car is wishlisted by user
@@ -372,10 +373,10 @@ export async function getSavedCars(req, res) {
     try {
         const { userId } = req.params;
         if (!userId) {
-            return {
+            res.status(401).json({
                 success: false,
                 error: "Unauthorized",
-            };
+            });
         }
 
         // Get the user from our database
