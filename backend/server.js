@@ -9,6 +9,8 @@ import cookieParser from 'cookie-parser';
 import settings from './Routes/settings.js';
 import home from './Routes/home.js';
 import carlisting from "./Routes/carlisting.js"
+import testdrive from "./Routes/testdrive.js"
+
 const app = express();
 
 app.use(cors({
@@ -26,7 +28,8 @@ app.use("/api/admin", admin);
 app.use("/api/car", car);
 app.use("/api/settings", settings);
 app.use("/api", home);
-app.use("/api", carlisting)
+app.use("/api", carlisting);
+app.use("/api", testdrive);
 
 
 app.listen(3000, () =>
