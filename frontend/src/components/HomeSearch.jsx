@@ -190,7 +190,6 @@ export function HomeSearch() {
                                 className="w-full"
                                 disabled={isUploading}
                             >
-                                Search with this Image
                                 {isUploading
                                     ? "Uploading..."
                                     : isProcessing

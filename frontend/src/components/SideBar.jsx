@@ -18,7 +18,7 @@ export const SideBar = () => {
         {
             label: "Test Drives",
             icon: Calendar,
-            href: "/admin/test-drives",
+            href: "/admin/testdrives",
         },
         {
             label: "Settings",

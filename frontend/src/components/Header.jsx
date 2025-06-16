@@ -38,7 +38,7 @@ export const Header = () => {
                                 </Button>
                             </Link>) : (
                             <SignedIn>
-                                <Link to={"/saved-cars"}>
+                                <Link to={"/savedcars"}>
                                     <Button className="bg-slate-700">
                                         <Heart size={18} />
                                         <span className="hidden md:inline">Saved Cars</span>
