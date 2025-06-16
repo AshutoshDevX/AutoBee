@@ -10,12 +10,11 @@ export const CarsPage = () => {
         try {
             const getFiltersData = async () => {
                 const filtersData = await axios.get("http://localhost:3000/api/carfilters");
-                setFiltersData(filtersData)
+                setFiltersData(filtersData.data)
             }
-
-
             getFiltersData();
         } catch (error) {
+            console.log(error)
             res.status(500).json({
                 message: "Internal server error"
             })
@@ -26,7 +25,7 @@ export const CarsPage = () => {
 
     return (
         <div className="container mx-auto px-4 py-12">
-            <h1 className="text-6xl mb-4 gradient-title">Browse Cars</h1>
+            <h1 className="text-6xl mb-4 bg-gradient-to-br from-slate-900 to-slate-600 font-extrabold tracking-tighter pr-2 pb-2 text-transparent  bg-clip-text">Browse Cars</h1>
 
             <div className="flex flex-col lg:flex-row gap-8">
                 {/* Filters Section */}
