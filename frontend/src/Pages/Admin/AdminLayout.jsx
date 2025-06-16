@@ -55,7 +55,7 @@ export const AdminLayout = () => {
                 <main className="md:pl-56  h-full">
                     <Outlet />
                 </main>
-                <div className="flex h-[100vh] w-56 flex-col inset-y-0 z-50">
+                <div className="flex h-[10vh] w-56 flex-col inset-y-0 z-50">
                 </div>
             </div>
         </div>
