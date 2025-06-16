@@ -1,41 +1,105 @@
-import React, { useState } from 'react'
-import { Card, CardContent } from "@/components/ui/card"
-import { CarIcon, Heart } from 'lucide-react'
+import { useState, useEffect } from "react";
+import { Link } from "react-router";
+import { Heart, Car as CarIcon, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge"
-import { useNavigate } from 'react-router';
-export const CarCard = ({ car }) => {
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
+import { useAuth } from "@clerk/clerk-react";
+import { useNavigate } from "react-router";
+import { useFetch } from "../hooks/useFetch";
 
-    const [saved, setSaved] = useState(car.wishlisted);
+export const CarCard = ({ car }) => {
+    const { isSignedIn, userId } = useAuth();
+    const [isSaved, setIsSaved] = useState(car.wishlisted);
+
     const navigate = useNavigate();
-    const handleToggleSave = async (e) => { };
+    // Use the useFetch hook
+    const {
+        loading: isToggling,
+        toggleSavedCarFn: toggleSavedCarFn,
+        data: toggleResult,
+        error: toggleError,
+    } = useFetch();
+
+    // Handle toggle result with useEffect
+    useEffect(() => {
+        if (toggleResult?.success && toggleResult.saved !== isSaved) {
+            setIsSaved(toggleResult.saved);
+            toast.success(toggleResult.message);
+        }
+    }, [toggleResult, isSaved]);
+
+    // Handle errors with useEffect
+    useEffect(() => {
+        if (toggleError) {
+            toast.error("Failed to update favorites");
+        }
+    }, [toggleError]);
+
+    // Handle save/unsave car
+    const handleToggleSave = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!isSignedIn) {
+            console.log("YOu are not signed n")
+            toast.error("Please sign in to save cars");
+            navigate("/sign-in");
+            return;
+        }
+
+        if (isToggling) return;
+
+        // Call the toggleSavedCar function using our useFetch hook
+        await toggleSavedCarFn(car.id, userId);
+    };
+
     return (
-        <Card className="overflow-hidden hover:shadow-lg transition group py-0">
+        <Card className="overflow-hidden hover:shadow-lg transition group">
             <div className="relative h-48">
                 {car.images && car.images.length > 0 ? (
-                    <div className="relative w-full h-full">
-                        <img src={car.images[0]} alt={`${car.make} ${car.model}`}
-                            className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
+                    <div className="relative w-full h-55">
+                        <img
+                            src={car.images[0]}
+                            alt={`${car.make} ${car.model}`}
+                            fill
+                            className="object-cover group-hover:scale-105 transition duration-300 h-full w-full"
+                        />
                     </div>
-
                 ) : (
                     <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                         <CarIcon className="h-12 w-12 text-gray-400" />
                     </div>
                 )}
 
-                <Button variant="ghost" size="icon" className={`absolute top-2 right-2 bg-white/90 rounded-full p-1.5 ${saved ? "text-red-500 hover:text-red-600" : "text-gray-600 hover:text-gray-900"}`}
-                    onClick={handleToggleSave}>
-                    <Heart className={saved ? "fill-current" : ""} size={20} />
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`absolute top-2 right-2 bg-white/90 rounded-full p-1.5 ${isSaved
+                        ? "text-red-500 hover:text-red-600"
+                        : "text-gray-600 hover:text-gray-900"
+                        }`}
+                    onClick={handleToggleSave}
+                    disabled={isToggling}
+                >
+                    {isToggling ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                        <Heart className={isSaved ? "fill-current" : ""} size={20} />
+                    )}
                 </Button>
-
             </div>
 
             <CardContent className="p-4">
                 <div className="flex flex-col mb-2">
-                    <h3 className="text-lg font-bold line-clamp-1">{car.make} {car.model}</h3>
+                    <h3 className="text-lg font-bold line-clamp-1">
+                        {car.make} {car.model}
+                    </h3>
+                    <span className="text-xl font-bold text-blue-600">
+                        ${car.price.toLocaleString()}
+                    </span>
                 </div>
-                <span className="text-xl font-bold text-blue-600">${car.price.toLocaleString()}</span>
 
                 <div className="text-gray-600 mb-2 flex items-center">
                     <span>{car.year}</span>
@@ -68,7 +132,6 @@ export const CarCard = ({ car }) => {
                     </Button>
                 </div>
             </CardContent>
-
         </Card>
-    )
-}
+    );
+};
