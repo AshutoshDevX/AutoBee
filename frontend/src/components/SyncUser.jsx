@@ -9,7 +9,7 @@ function SyncUser() {
         if (isSignedIn && user) {
             const syncUser = async () => {
                 try {
-                    const response = await axios.post('http://localhost:3000/api/user/sync', {
+                    const response = await axios.post('https://autobee-backend.onrender.com/api/user/sync', {
                         clerkUserId: user.id,
                         email: user.emailAddresses[0]?.emailAddress,
                         name: `${user.firstName} ${user.lastName}`,

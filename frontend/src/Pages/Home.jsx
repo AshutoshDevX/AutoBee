@@ -29,7 +29,7 @@ export const Home = () => {
     useEffect(() => {
         try {
             const getData = async () => {
-                const response = await axios.get("http://localhost:3000/api");
+                const response = await axios.get("https://autobee-backend.onrender.com/api");
                 setFeaturedCars(response.data.cars);
             }
 

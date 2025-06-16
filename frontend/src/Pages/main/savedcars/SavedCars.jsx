@@ -18,7 +18,7 @@ export default function SavedCars() {
         const getSavedCars = async () => {
             try {
 
-                const response = await axios.get(`http://localhost:3000/api/savedcars/${userId}`);
+                const response = await axios.get(`https://autobee-backend.onrender.com/api/savedcars/${userId}`);
 
                 setSavedCarsResult(response.data);
             } catch (error) {

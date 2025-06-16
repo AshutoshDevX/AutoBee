@@ -12,7 +12,7 @@ export const useFetch = () => {
         setError(null);
 
         try {
-            const response = await axios.post('http://localhost:3000/api/car/addcar', {
+            const response = await axios.post('https://autobee-backend.onrender.com/api/car/addcar', {
                 userId,
                 carData,
                 images
@@ -31,7 +31,7 @@ export const useFetch = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.post('http://localhost:3000/api/car/processcar', {
+            const response = await axios.post('https://autobee-backend.onrender.com/api/car/processcar', {
                 uploadedAiImage
             });
             setData(response);
@@ -47,7 +47,7 @@ export const useFetch = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.post("http://localhost:3000/api/car", {
+            const response = await axios.post("https://autobee-backend.onrender.com/api/car", {
                 userId,
                 search
             });
@@ -68,7 +68,7 @@ export const useFetch = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.put("http://localhost:3000/api/car/updatecar", {
+            const response = await axios.put("https://autobee-backend.onrender.com/api/car/updatecar", {
                 userId,
                 featured,
                 status,
@@ -91,7 +91,7 @@ export const useFetch = () => {
         setError(null);
 
         try {
-            const response = await axios.delete("http://localhost:3000/api/car/deletecar", {
+            const response = await axios.delete("https://autobee-backend.onrender.com/api/car/deletecar", {
                 data: {
                     userId,
                     id,
@@ -114,7 +114,7 @@ export const useFetch = () => {
         setError(null);
 
         try {
-            const response = await axios.get(`http://localhost:3000/api/settings/${userId}`);
+            const response = await axios.get(`https://autobee-backend.onrender.com/api/settings/${userId}`);
 
             setData(response.data);
             setError(null);
@@ -131,7 +131,7 @@ export const useFetch = () => {
         setError(null);
 
         try {
-            const response = await axios.get(`http://localhost:3000/api/settings/users/${userId}`);
+            const response = await axios.get(`https://autobee-backend.onrender.com/api/settings/users/${userId}`);
 
             setData(response.data);
             setError(null);
@@ -148,7 +148,7 @@ export const useFetch = () => {
         setError(null);
 
         try {
-            const response = await axios.post(`http://localhost:3000/api/settings/workinghours`, {
+            const response = await axios.post(`https://autobee-backend.onrender.com/api/settings/workinghours`, {
                 userId,
                 workingHours
             });
@@ -168,7 +168,7 @@ export const useFetch = () => {
         setError(null);
 
         try {
-            const response = await axios.put(`http://localhost:3000/api/settings/updaterole`, {
+            const response = await axios.put(`https://autobee-backend.onrender.com/api/settings/updaterole`, {
                 clerkUserId,
                 userId,
                 role
@@ -193,7 +193,7 @@ export const useFetch = () => {
         formData.append("image", imageFile);
 
         try {
-            const response = await axios.post("http://localhost:3000/api", formData);
+            const response = await axios.post("https://autobee-backend.onrender.com/api", formData);
 
             setData(response.data);
             setError(null);
@@ -210,7 +210,7 @@ export const useFetch = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.post("http://localhost:3000/api/cars", args[0]);
+            const response = await axios.post("https://autobee-backend.onrender.com/api/cars", args[0]);
             setData(response.data);
             setError(null);
         } catch (error) {
@@ -226,7 +226,7 @@ export const useFetch = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.get("http://localhost:3000/api/togglesavedcar", {
+            const response = await axios.get("https://autobee-backend.onrender.com/api/togglesavedcar", {
                 params: {
                     carId,
                     userId
@@ -248,7 +248,7 @@ export const useFetch = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.post("http://localhost:3000/api/testdrive", args);
+            const response = await axios.post("https://autobee-backend.onrender.com/api/testdrive", args);
 
             setData(response.data);
             setError(null);
@@ -266,7 +266,7 @@ export const useFetch = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.delete("http://localhost:3000/api/canceltestdrive", {
+            const response = await axios.delete("https://autobee-backend.onrender.com/api/canceltestdrive", {
                 params: {
                     bookingId,
                     userId
@@ -288,7 +288,7 @@ export const useFetch = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.post("http://localhost:3000/api/admin/admintestdrives", args);
+            const response = await axios.post("https://autobee-backend.onrender.com/api/admin/admintestdrives", args);
 
             setData(response.data);
 
@@ -307,7 +307,7 @@ export const useFetch = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.put("http://localhost:3000/api/admin/updatestatus", args);
+            const response = await axios.put("https://autobee-backend.onrender.com/api/admin/updatestatus", args);
 
             setData(response.data);
 
@@ -327,7 +327,7 @@ export const useFetch = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.delete("http://localhost:3000/api/admin/canceltestdrive", {
+            const response = await axios.delete("https://autobee-backend.onrender.com/api/admin/canceltestdrive", {
                 params: {
                     bookingId,
                     userId

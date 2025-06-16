@@ -20,7 +20,7 @@ export function CarDetailsPage() {
             if (!isLoaded) return;
             if (!userId) navigate('/signin');
             try {
-                const response = await axios.get("http://localhost:3000/api/cars", {
+                const response = await axios.get("https://autobee-backend.onrender.com/api/cars", {
                     params: {
                         carId: id,
                         userId: userId

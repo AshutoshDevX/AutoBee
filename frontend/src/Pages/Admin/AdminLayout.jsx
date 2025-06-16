@@ -18,7 +18,7 @@ export const AdminLayout = () => {
         if (isLoaded && isSignedIn && userId) {
             const admin = async () => {
                 try {
-                    const response = await axios.get(`http://localhost:3000/api/admin/${userId}`);
+                    const response = await axios.get(`https://autobee-backend.onrender.com/api/admin/${userId}`);
                     setAuthorized(response.data.authorized);
                     setIsAdminPage(true);
                 } catch (err) {

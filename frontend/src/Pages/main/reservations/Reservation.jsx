@@ -19,7 +19,7 @@ export default function Reservations() {
             navigate("/signin");
         }
         const getUserTestDrives = async () => {
-            const response = await axios.get(`http://localhost:3000/api/usertestdrives/${userId}`);
+            const response = await axios.get(`https://autobee-backend.onrender.com/api/usertestdrives/${userId}`);
 
             setReservationsResult(response.data);
             setLoading(false)
