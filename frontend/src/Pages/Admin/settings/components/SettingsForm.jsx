@@ -170,7 +170,7 @@ export const SettingsForm = () => {
 
         if (updateRoleResult?.success) {
             toast.success("User role updated successfully");
-            fetchUsers();
+            fetchUsers(userId);
             setConfirmAdminDialog(false);
             setConfirmRemoveDialog(false);
         }
@@ -194,14 +194,12 @@ export const SettingsForm = () => {
     // Make user admin
     const handleMakeAdmin = async () => {
         if (!userToPromote) return;
-        console.log(userToPromote)
         await updateRole(userId, userToPromote.id, "ADMIN");
     };
 
     // Remove admin privileges
     const handleRemoveAdmin = async () => {
         if (!userToDemote) return;
-        console.log(userToDemote)
         await updateRole(userId, userToDemote.id, "USER");
     };
 
