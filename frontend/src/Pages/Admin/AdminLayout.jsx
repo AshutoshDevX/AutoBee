@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router';
 import { useContext } from 'react';
 import { AdminContext } from '../../components/AdminContext';
 import { SideBar } from '../../components/SideBar';
-import { AdminPage } from './AdminPage';
 import { Outlet } from 'react-router';
 
 
