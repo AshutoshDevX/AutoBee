@@ -79,7 +79,6 @@ export function TestDriveCard({
                                 <img
                                     src={booking.car.images[0]}
                                     alt={`${booking.car.make} ${booking.car.model}`}
-                                    fill
                                     className="object-cover"
                                 />
                             </div>

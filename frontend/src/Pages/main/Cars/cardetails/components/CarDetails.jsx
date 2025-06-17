@@ -115,7 +115,6 @@ export function CarDetails({ car, testDriveInfo }) {
                             <img
                                 src={car.images[currentImageIndex]}
                                 alt={`${car.year} ${car.make} ${car.model}`}
-                                fill
                                 className="object-cover"
                                 priority
                             />
@@ -142,7 +141,6 @@ export function CarDetails({ car, testDriveInfo }) {
                                         src={image}
                                         alt={`${car.year} ${car.make} ${car.model} - view ${index + 1
                                             }`}
-                                        fill
                                         className="object-cover"
                                     />
                                 </div>

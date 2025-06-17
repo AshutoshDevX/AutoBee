@@ -63,7 +63,6 @@ export const CarCard = ({ car }) => {
                         <img
                             src={car.images[0]}
                             alt={`${car.make} ${car.model}`}
-                            fill
                             className="object-cover group-hover:scale-105 transition duration-300 h-full w-full"
                         />
                     </div>
