@@ -116,7 +116,6 @@ export function CarDetails({ car, testDriveInfo }) {
                                 src={car.images[currentImageIndex]}
                                 alt={`${car.year} ${car.make} ${car.model}`}
                                 className="object-cover"
-                                priority
                             />
                         ) : (
                             <div className="w-full h-full bg-gray-200 flex items-center justify-center">

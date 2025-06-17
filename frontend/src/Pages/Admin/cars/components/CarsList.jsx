@@ -207,7 +207,6 @@ export const CarsList = () => {
                                                             height={40}
                                                             width={40}
                                                             className="w-full h-full object-cover"
-                                                            priority
                                                         />
                                                     ) : (
                                                         <div className="w-full h-full bg-gray-200 flex items-center justify-center">

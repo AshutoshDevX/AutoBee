@@ -614,7 +614,6 @@ export const AddCarForm = () => {
                                                             height={50}
                                                             width={50}
                                                             className="h-28 w-full object-cover rounded-md"
-                                                            priority
                                                         />
                                                         <Button
                                                             type="button"
