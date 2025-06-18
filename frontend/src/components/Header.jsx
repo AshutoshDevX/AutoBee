@@ -60,9 +60,11 @@ export const Header = () => {
                         )
                     }
                     <SignedOut>
-                        <SignInButton forceRedirectUrl="/signin">
-                            <Button variant="outline">Login</Button>
-                        </SignInButton>
+                        {!isAdminPage && (
+                            <SignInButton forceRedirectUrl="/">
+                                <Button variant="outline">Login</Button>
+                            </SignInButton>
+                        )}
                     </SignedOut>
                     <SignedIn>
                         <UserButton
