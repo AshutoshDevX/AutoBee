@@ -4,6 +4,7 @@ import { Calendar, Car, ChevronRight, Shield } from 'lucide-react'
 import { Link } from 'react-router'
 import { bodyTypes, carMakes, faqItems } from '../lib/data'
 import { CarCard } from '../components/CarCard'
+import image from '../assets/body/suv.webp'
 import {
     Accordion,
     AccordionContent,
@@ -167,7 +168,7 @@ export const Home = () => {
                                     <div className="overflow-hidden rounded-lg flex justify-end h-28 mb-4 relative">
                                         <img
                                             src={
-                                                type.image || `/body/${type.name.toLowerCase()}.webp`
+                                                image
                                             }
                                             alt={type.name}
                                             className="object-cover group-hover:scale-105 transition duration-300"
