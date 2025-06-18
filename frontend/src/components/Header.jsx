@@ -60,7 +60,7 @@ export const Header = () => {
                         )
                     }
                     <SignedOut>
-                        <SignInButton forceRedirectUrl="/">
+                        <SignInButton forceRedirectUrl="/signin">
                             <Button variant="outline">Login</Button>
                         </SignInButton>
                     </SignedOut>
