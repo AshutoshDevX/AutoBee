@@ -27,7 +27,7 @@ export default function SavedCars() {
         };
 
         getSavedCars();
-    }, [userId, isLoaded])
+    }, [userId, isLoaded, navigate]);
 
 
     if (!savedCarsResult || !isLoaded) {

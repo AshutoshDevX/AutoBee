@@ -27,7 +27,7 @@ export default function TestDrivePage() {
                 })
 
                 setResult(response.data)
-            } catch (error) {
+            } catch  {
                 setResult({ success: false });
             } finally {
                 setLoading(false);
@@ -36,7 +36,7 @@ export default function TestDrivePage() {
         }
 
         getCarById();
-    }, [id, userId, isLoaded])
+    }, [id, userId, isLoaded, navigate])
 
     if (loading || !isLoaded) {
         return (

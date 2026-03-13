@@ -21,7 +21,7 @@ export const Home = () => {
     const [, setIsAdminPage] = useContext(AdminContext);
     useEffect(() => {
         setIsAdminPage(false)
-    }, [])
+    }, [setIsAdminPage])
 
 
 

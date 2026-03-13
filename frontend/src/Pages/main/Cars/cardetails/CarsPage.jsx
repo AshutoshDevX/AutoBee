@@ -28,7 +28,7 @@ export function CarDetailsPage() {
                 })
 
                 setResult(response.data)
-            } catch (error) {
+            } catch {
                 setResult({ success: false });
             } finally {
                 setLoading(false);
@@ -37,7 +37,7 @@ export function CarDetailsPage() {
         }
 
         getCarById();
-    }, [id, userId, isLoaded])
+    }, [id, userId, isLoaded, navigate])
 
 
     if (loading || !isLoaded) {

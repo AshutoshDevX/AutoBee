@@ -30,7 +30,7 @@ export const AdminLayout = () => {
 
             admin();
         }
-    }, [isSignedIn, userId]);
+    }, [isSignedIn, userId, setIsAdminPage, isLoaded]);
     useEffect(() => {
         if (isLoaded && (!isSignedIn || !authorized)) {
             navigate('/');

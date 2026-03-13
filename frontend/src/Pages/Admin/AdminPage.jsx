@@ -15,7 +15,7 @@ export default function AdminPage() {
         }
 
         getDashBoardData();
-    }, [])
+    }, [userId])
 
     if (!dashboardData || !isLoaded) {
         return (
