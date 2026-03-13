@@ -10,7 +10,7 @@ export default function AdminPage() {
 
     useEffect(() => {
         const getDashBoardData = async () => {
-            const response = await axios.get(`https://autobee-backend.onrender.com/api/admin/dashboarddata/${userId}`)
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/dashboarddata/${userId}`)
             setdashBoardData(response.data);
         }
 

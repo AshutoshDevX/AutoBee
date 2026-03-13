@@ -9,7 +9,7 @@ export const CarsPage = () => {
     useEffect(() => {
         try {
             const getFiltersData = async () => {
-                const filtersData = await axios.get("https://autobee-backend.onrender.com/api/carfilters");
+                const filtersData = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/carfilters`);
                 setFiltersData(filtersData.data)
             }
             getFiltersData();

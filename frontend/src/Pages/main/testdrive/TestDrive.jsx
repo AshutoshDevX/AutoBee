@@ -19,7 +19,7 @@ export default function TestDrivePage() {
             if (!isLoaded) return;
             if (!userId) navigate('/signin');
             try {
-                const response = await axios.get("https://autobee-backend.onrender.com/api/cars", {
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/cars`, {
                     params: {
                         carId: id,
                         userId: userId

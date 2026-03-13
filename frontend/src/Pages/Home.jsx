@@ -29,7 +29,7 @@ export const Home = () => {
     useEffect(() => {
         try {
             const getData = async () => {
-                const response = await axios.get("https://autobee-backend.onrender.com/api");
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api`);
                 setFeaturedCars(response.data.cars);
             }
 
