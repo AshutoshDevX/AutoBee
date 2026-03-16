@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 import { v4 as uuidv4 } from 'uuid';
 import { createClient } from '@supabase/supabase-js';
 import prisma from "../lib/prisma.js";
@@ -7,25 +7,37 @@ const fileToBase64 = async (file) => {
     const buffer = file.split(',')[1];
     return buffer.toString("base64");
 };
+
+// Coerce various price formats (including ranges / currency symbols) into a single numeric value
+const normalizePriceToNumber = (value) => {
+    if (value === null || value === undefined) return null;
+    if (typeof value === "number") return value;
+    if (typeof value === "string") {
+        // Remove currency symbols and spaces, keep digits, dots, commas, and dashes
+        const cleaned = value.replace(/[^\d.,-]/g, "");
+        // Extract all numbers; use the first as the stored price (e.g. lower bound of a range)
+        const matches = cleaned.replace(/,/g, "").match(/\d+(\.\d+)?/g);
+        if (!matches || matches.length === 0) return null;
+        const first = parseFloat(matches[0]);
+        return Number.isNaN(first) ? null : first;
+    }
+    return null;
+};
 export const processCarImageWithAI = async (req, res) => {
     const { uploadedAiImage } = req.body;
     try {
 
         if (!process.env.GEMINI_API_KEY) {
-            throw new Error("Gemini API key is not configured")
+            return res.status(401).json({
+                success: false,
+                error: "Gemini API key is not configured",
+            });
         }
 
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const ai = new GoogleGenAI({});
 
 
-        const base64Image = await fileToBase64(uploadedAiImage)
-        const imagePart = {
-            inlineData: {
-                data: base64Image,
-                mimeType: "image/jpg",
-            },
-        };
+        const base64Image = await fileToBase64(uploadedAiImage);
         const prompt = `
       Analyze this car image and extract the following information:
       1. Make (manufacturer)
@@ -33,11 +45,11 @@ export const processCarImageWithAI = async (req, res) => {
       3. Year (approximately)
       4. Color
       5. Body type (SUV, Sedan, Hatchback, etc.)
-      6. Mileage
+      6. Mileage (approximately. Don't give ranges, just a single number that's your best guess)
       7. Fuel type (your best guess)
       8. Transmission type (your best guess)
-      9. Price (your best guess)
-      9. Short Description as to be added to a car listing
+      9. Price (your best guess in indian rupees. Don't give ranges, just a single number that's your best guess)
+      10. Short Description as to be added to a car listing
 
       Format your response as a clean JSON object with these fields:
       {
@@ -58,17 +70,55 @@ export const processCarImageWithAI = async (req, res) => {
       Only respond with the JSON object, nothing else.
     `;
 
-        const result = await model.generateContent([imagePart, prompt]);
-        const response = result.response;
-        const text = response.text();
-
+        const result = await ai.models.generateContent({
+            model: "gemini-3-flash-preview",
+            contents: [
+                {
+                    inlineData: {
+                        mimeType: "image/jpeg",
+                        data: base64Image,
+                    },
+                },
+                { text: prompt },
+            ],
+        });
+        // New @google/genai: text is in candidates[0].content.parts[].text
+        const content = result.candidates?.[0]?.content;
+        const text = content?.parts?.map((p) => p.text).filter(Boolean).join("") ?? "";
         const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
 
 
         try {
-            const carDetails = JSON.parse(cleanedText);
+            const raw = JSON.parse(cleanedText);
 
-            // Validate the response format
+            // Normalize Gemini response into the shape the frontend expects
+            const id = raw.car_identification || {};
+            const specs = raw.specifications || {};
+
+            const normalized = {
+                make: raw.make ?? id.make ?? "",
+                model: raw.model ?? id.model ?? "",
+                year: typeof raw.year === "number"
+                    ? raw.year
+                    : (typeof id.year === "string"
+                        ? parseInt(id.year, 10) || 0
+                        : 0),
+                color: raw.color ?? specs.exterior_color ?? "",
+                price: raw.price ?? "",
+                mileage: raw.mileage ?? "",
+                bodyType: raw.bodyType ?? specs.body_style ?? "",
+                fuelType: raw.fuelType ?? specs.fuel_type ?? "",
+                transmission: raw.transmission ?? specs.transmission ?? "",
+                description:
+                    raw.description ??
+                    (Array.isArray(raw.visible_features)
+                        ? raw.visible_features.join(", ")
+                        : ""),
+                confidence:
+                    typeof raw.confidence === "number" ? raw.confidence : 0.7,
+            };
+
+            // Validate the response format against required fields
             const requiredFields = [
                 "make",
                 "model",
@@ -84,32 +134,33 @@ export const processCarImageWithAI = async (req, res) => {
             ];
 
             const missingFields = requiredFields.filter(
-                (field) => !(field in carDetails)
+                (field) => normalized[field] === undefined
             );
 
             if (missingFields.length > 0) {
                 throw new Error(
-                    `AI response missing required fields: ${missingFields.join(", ")}`
+                    `AI response missing required fields after normalization: ${missingFields.join(", ")}`
                 );
             }
 
-            // Return success response with data
-            res.json({
+            // Return success response with normalized data
+            return res.json({
                 success: true,
-                data: carDetails,
+                data: normalized,
             });
         } catch (parseError) {
             console.error("Failed to parse AI response:", parseError);
-            console.log("Raw response:", text);
-            res.status(501).json()({
-                success: false,
+            return res.status(501).json({                success: false,
                 error: "Failed to parse AI response",
             });
         }
 
     } catch (err) {
-        console.error();
-        throw new Error("Gemini API error:" + err.message);
+        console.error("Gemini API error:", err);
+        return res.status(500).json({
+            success: false,
+            error: "Gemini API error: " + err.message,
+        });
     }
 }
 
@@ -130,10 +181,16 @@ export const addCar = async (req, res) => {
         const carId = uuidv4();
         const folderPath = `cars/${carId}`;
 
-
+        const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+        if (!serviceRoleKey) {
+            return res.status(500).json({
+                success: false,
+                error: "Server misconfiguration: SUPABASE_SERVICE_ROLE_KEY is not set",
+            });
+        }
         const supabase = createClient(
             process.env.VITE_SUPABASE_URL,
-            process.env.VITE_SUPABASE_ANON_KEY // Use service role for uploads
+            serviceRoleKey
         );
 
 
@@ -182,14 +239,30 @@ export const addCar = async (req, res) => {
             throw new Error("No valid images were uploaded");
         }
 
+
+        const normalizedPrice = normalizePriceToNumber(carData.price);
+        if (normalizedPrice === null) {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid or missing price. Please enter a numeric price (you can still show a range in the UI).",
+            });
+        }
+        const normalizedMileage = normalizePriceToNumber(carData.mileage);
+        if (normalizedMileage === null) {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid or missing mileage. Please enter a numeric mileage (you can still show a range in the UI).",
+            });
+        }
+
         const car = await prisma.car.create({
             data: {
                 id: carId,
                 make: carData.make,
                 model: carData.model,
                 year: carData.year,
-                price: carData.price,
-                mileage: carData.mileage,
+                price: normalizedPrice,
+                mileage: normalizedMileage,
                 color: carData.color,
                 fuelType: carData.fuelType,
                 transmission: carData.transmission,
@@ -300,10 +373,12 @@ export const deleteCar = async (req, res) => {
 
 
         try {
-            const supabase = createClient(
-                process.env.VITE_SUPABASE_URL,
-                process.env.VITE_SUPABASE_ANON_KEY
-            );
+            const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+            if (serviceRoleKey) {
+                const supabase = createClient(
+                    process.env.VITE_SUPABASE_URL,
+                    serviceRoleKey
+                );
 
 
 
@@ -321,6 +396,7 @@ export const deleteCar = async (req, res) => {
                 if (error) {
                     console.error("Error deleting images:", error);
                 }
+            }
             }
         } catch (storageError) {
             console.error("Error with storage operations:", storageError);
