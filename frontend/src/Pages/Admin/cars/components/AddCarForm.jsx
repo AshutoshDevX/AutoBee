@@ -277,10 +277,12 @@ export const AddCarForm = () => {
         // Prepare data for server action
         const carData = {
             ...data,
-            year: parseInt(data.year),
-            price: parseFloat(data.price),
-            mileage: parseInt(data.mileage),
-            seats: data.seats ? parseInt(data.seats) : null,
+            year: parseInt(data.year, 10),
+            // Send price as the raw string so the backend can
+            // handle ranges / currency formatting and normalize it
+            price: data.price,
+            mileage: parseInt(data.mileage, 10),
+            seats: data.seats ? parseInt(data.seats, 10) : null,
         };
 
         // Call the addCar function with our useFetch hook
