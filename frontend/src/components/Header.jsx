@@ -15,7 +15,7 @@ export const Header = () => {
     const { isSignedIn } = useUser();
     const [isAdminPage] = useContext(AdminContext);
     useEffect(() => {
-        if (isSignedIn && user) {
+        if (isSignedIn && !user.loading) {
             setIsAdmin(user.data.user.role)
         }
     }, [user]);
