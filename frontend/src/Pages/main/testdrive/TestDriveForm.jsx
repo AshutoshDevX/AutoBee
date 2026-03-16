@@ -63,7 +63,7 @@ export function TestDriveForm({ car, testDriveInfo }) {
         watch,
         setValue,
         reset,
-        formState: { errors, isValid },
+        formState: { errors },
     } = useForm({
         resolver: zodResolver(testDriveSchema),
         defaultValues: {
