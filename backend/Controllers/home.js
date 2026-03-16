@@ -1,6 +1,6 @@
 import prisma from "../lib/prisma.js";
 import { aj } from "../lib/arcjet.js";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 import { serializeCarData } from "../lib/helper.js";
 
 
@@ -66,25 +66,15 @@ export async function processImageSearch(req, res) {
         // Check if API key is available
         if (!process.env.GEMINI_API_KEY) {
             return res.status(401).json({
-                message: "Gemini API key is not configured"
-
-            })
+                message: "Gemini API key is not configured",
+            });
         }
 
-        // Initialize Gemini API
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        // Initialize Gemini API (new @google/genai client)
+        const ai = new GoogleGenAI({});
 
         // Convert image file to base64
         const base64Image = file.buffer.toString("base64");
-
-        // Create image part for the model
-        const imagePart = {
-            inlineData: {
-                data: base64Image,
-                mimeType: file.mimetype,
-            },
-        };
 
         // Define the prompt for car search extraction
         const prompt = `
@@ -105,10 +95,22 @@ export async function processImageSearch(req, res) {
       Only respond with the JSON object, nothing else.
     `;
 
-        // Get response from Gemini
-        const result = await model.generateContent([imagePart, prompt]);
-        const response = result.response;
-        const text = response.text();
+        // Get response from Gemini using multimodal generateContent
+        const result = await ai.models.generateContent({
+            model: "gemini-3-flash-preview",
+            contents: [
+                {
+                    inlineData: {
+                        mimeType: file.mimetype,
+                        data: base64Image,
+                    },
+                },
+                { text: prompt },
+            ],
+        });
+        // New @google/genai: text is in candidates[0].content.parts[].text
+        const content = result.candidates?.[0]?.content;
+        const text = content?.parts?.map((p) => p.text).filter(Boolean).join("") ?? "";
         const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
 
         // Parse the JSON response
@@ -123,13 +125,17 @@ export async function processImageSearch(req, res) {
         } catch (parseError) {
             console.error("Failed to parse AI response:", parseError);
             console.log("Raw response:", text);
-            res.status(501).json({
+            return res.status(501).json({
                 success: false,
                 error: "Failed to parse AI response",
             });
         }
     } catch (error) {
-        throw new Error("AI Search error:" + error.message);
+        console.error("AI Search error:", error);
+        return res.status(500).json({
+            success: false,
+            error: "AI search failed",
+        });
     }
 }
 
