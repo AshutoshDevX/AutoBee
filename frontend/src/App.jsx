@@ -19,7 +19,8 @@ import { CarDetailsPage } from "./Pages/main/Cars/cardetails/CarsPage.jsx"
 import TestDrivePage from "./Pages/main/testdrive/TestDrive.jsx"
 import Reservations from "./Pages/main/reservations/Reservation.jsx"
 function App() {
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
   return (
     <>
       <div>
@@ -44,7 +45,7 @@ function App() {
           <Route path="/reservations" element={<Reservations />} />
         </Routes>
         <Toaster richColors />
-        <Footer />
+        {isAdminRoute ? null : <Footer />}  
       </div>
     </>
   )
