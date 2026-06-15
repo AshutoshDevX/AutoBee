@@ -23,7 +23,7 @@ export const Home = () => {
     const { userId } = useAuth();
     useEffect(() => {
         setIsAdminPage(false)
-    }, [])
+    }, [setIsAdminPage])
 
 
 
@@ -31,8 +31,7 @@ export const Home = () => {
     useEffect(() => {
         try {
             const getData = async () => {
-                const params = userId ? { userId } : {};
-                const response = await axios.get("https://autobee-backend.onrender.com/api", { params });
+                const response = await axios.get("https://autobee-backend.onrender.com/api");
                 setFeaturedCars(response.data.cars);
             }
 

@@ -9,15 +9,12 @@ export const CarsPage = () => {
     useEffect(() => {
         try {
             const getFiltersData = async () => {
-                const filtersData = await axios.get("https://autobee-backend.onrender.com/api/carfilters");
+                const filtersData = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/carfilters`);
                 setFiltersData(filtersData.data)
             }
             getFiltersData();
         } catch (error) {
-            console.log(error)
-            res.status(500).json({
-                message: "Internal server error"
-            })
+            console.error('Failed to fetch filters data:', error);
         }
 
     }, [])

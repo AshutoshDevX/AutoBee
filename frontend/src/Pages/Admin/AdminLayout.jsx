@@ -18,7 +18,7 @@ export const AdminLayout = () => {
         if (isLoaded && isSignedIn && userId) {
             const admin = async () => {
                 try {
-                    const response = await axios.get(`https://autobee-backend.onrender.com/api/admin/${userId}`);
+                    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/${userId}`);
                     setAuthorized(response.data.authorized);
                     setIsAdminPage(true);
                 } catch (err) {
@@ -30,7 +30,7 @@ export const AdminLayout = () => {
 
             admin();
         }
-    }, [isSignedIn, userId]);
+    }, [isSignedIn, userId, setIsAdminPage, isLoaded]);
     useEffect(() => {
         if (isLoaded && (!isSignedIn || !authorized)) {
             navigate('/');

@@ -13,7 +13,7 @@
   "dependencies": {
     "@arcjet/inspect": "^1.0.0-beta.8",
     "@arcjet/node": "^1.0.0-beta.8",
-    "@google/generative-ai": "^0.24.1",
+    "@google/genai": "^1.45.0",
     "@prisma/client": "^6.9.0",
     "@supabase/supabase-js": "^2.50.0",
     "cookie-parser": "^1.4.7",
@@ -22,11 +22,11 @@
     "express": "^5.1.0",
     "fs": "^0.0.1-security",
     "multer": "^2.0.1",
-    "nodemon": "^3.1.10",
     "path": "^0.12.7",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "nodemon": "^3.1.14",
     "prisma": "^6.9.0"
   }
 }

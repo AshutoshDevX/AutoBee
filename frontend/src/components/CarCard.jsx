@@ -63,7 +63,7 @@ export const CarCard = ({ car }) => {
                         <img
                             src={car.images[0]}
                             alt={`${car.make} ${car.model}`}
-                            className="object-cover group-hover:scale-105 transition duration-300 h-full w-full"
+                            className="object-contain group-hover:scale-105 transition duration-300 h-full w-full"
                         />
                     </div>
                 ) : (
@@ -96,7 +96,7 @@ export const CarCard = ({ car }) => {
                         {car.make} {car.model}
                     </h3>
                     <span className="text-xl font-bold text-blue-600">
-                        ${car.price.toLocaleString()}
+                        ₹{car.price.toLocaleString()}
                     </span>
                 </div>
 

@@ -18,7 +18,7 @@ export default function SavedCars() {
         const getSavedCars = async () => {
             try {
 
-                const response = await axios.get(`https://autobee-backend.onrender.com/api/savedcars/${userId}`);
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/savedcars/${userId}`);
 
                 setSavedCarsResult(response.data);
             } catch (error) {
@@ -27,7 +27,7 @@ export default function SavedCars() {
         };
 
         getSavedCars();
-    }, [userId, isLoaded])
+    }, [userId, isLoaded, navigate]);
 
 
     if (!savedCarsResult || !isLoaded) {

@@ -63,7 +63,7 @@ export function TestDriveForm({ car, testDriveInfo }) {
         watch,
         setValue,
         reset,
-        formState: { errors, isValid },
+        formState: { errors },
     } = useForm({
         resolver: zodResolver(testDriveSchema),
         defaultValues: {
@@ -242,7 +242,7 @@ export function TestDriveForm({ car, testDriveInfo }) {
                         </h3>
 
                         <div className="mt-2 text-xl font-bold text-blue-600">
-                            ${car.price.toLocaleString()}
+                            ₹{car.price.toLocaleString()}
                         </div>
 
                         <div className="mt-4 text-sm text-gray-500">

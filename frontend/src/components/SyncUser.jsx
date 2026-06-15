@@ -4,21 +4,45 @@ import axios from 'axios';
 
 function SyncUser() {
     const { isSignedIn, user } = useUser();
-    const [newUser, setNewUser] = useState("")
+    const [syncStatus, setSyncStatus] = useState({
+        loading: false,
+        error: null,
+        data: null
+    });
+
     useEffect(() => {
         if (isSignedIn && user) {
             const syncUser = async () => {
+                setSyncStatus({ loading: true, error: null, data: null });
+                
                 try {
-                    const response = await axios.post('https://autobee-backend.onrender.com/api/user/sync', {
+                    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                    
+                    if (!backendUrl) {
+                        throw new Error('VITE_BACKEND_URL is not defined');
+                    }
+
+                    const response = await axios.post(`${backendUrl}/api/user/sync`, {
                         clerkUserId: user.id,
                         email: user.emailAddresses[0]?.emailAddress,
-                        name: `${user.firstName} ${user.lastName}`,
+                        name: `${user.firstName} ${user.lastName}`.trim(),
                         imageUrl: user.imageUrl,
                     });
 
-                    setNewUser(response)
+                    setSyncStatus({ 
+                        loading: false, 
+                        error: null, 
+                        data: response.data 
+                    });
+                    
+                    console.log('User synced successfully:', response.data);
                 } catch (err) {
                     console.error('Failed to sync user:', err);
+                    setSyncStatus({ 
+                        loading: false, 
+                        error: err.message, 
+                        data: null 
+                    });
                 }
             };
 
@@ -26,7 +50,7 @@ function SyncUser() {
         }
     }, [isSignedIn, user]);
 
-    return newUser;
+    return syncStatus;
 }
 
 export default SyncUser;

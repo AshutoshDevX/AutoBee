@@ -12,10 +12,10 @@ export async function getAdmin(req, res) {
 
     // If user not found in our prisma or not an admin, return not authorized
     if (!user || user.role !== "ADMIN") {
-        res.status(401).json({ authorized: false, reason: "not-admin" });
+        return res.status(401).json({ authorized: false, reason: "not-admin" });
     }
 
-    res.json({ authorized: true, user });
+    return res.json({ authorized: true, user });
 }
 
 /**
@@ -148,7 +148,7 @@ export async function updateTestDriveStatus(req, res) {
             "NO_SHOW",
         ];
         if (!validStatuses.includes(newStatus)) {
-            res.status(403).json({
+            return res.status(403).json({
                 success: false,
                 error: "Invalid status",
             });
@@ -183,7 +183,7 @@ export async function getDashboardData(req, res) {
         });
 
         if (!user || user.role !== "ADMIN") {
-            res.status(401).json({
+            return res.status(401).json({
                 success: false,
                 error: "Unauthorized",
             });
