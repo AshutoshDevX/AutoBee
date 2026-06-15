@@ -6,6 +6,7 @@ import { serializeCarData } from "../lib/helper.js";
 
 export async function getFeaturedCars(req, res) {
     try {
+        const { userId } = req.query;
         const limit = 3;
         const cars = await prisma.car.findMany({
             where: {
@@ -16,7 +17,22 @@ export async function getFeaturedCars(req, res) {
             orderBy: { createdAt: "desc" },
         });
 
-        const newCars = cars.map(serializeCarData);
+        // Check wishlist status if user is logged in
+        let wishlisted = new Set();
+        if (userId) {
+            const user = await prisma.user.findUnique({
+                where: { clerkUserId: userId },
+            });
+            if (user) {
+                const savedCars = await prisma.userSavedCar.findMany({
+                    where: { userId: user.id },
+                    select: { carId: true },
+                });
+                wishlisted = new Set(savedCars.map((saved) => saved.carId));
+            }
+        }
+
+        const newCars = cars.map((car) => serializeCarData(car, wishlisted.has(car.id)));
 
         res.json({
             cars: newCars
