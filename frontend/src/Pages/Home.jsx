@@ -11,6 +11,7 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import { SignedOut } from '@clerk/clerk-react'
+import { useAuth } from '@clerk/clerk-react'
 import { useContext, useState } from 'react'
 import { AdminContext } from '../components/AdminContext'
 import { useEffect } from 'react'
@@ -19,6 +20,7 @@ import axios from 'axios'
 export const Home = () => {
     const [featuredCars, setFeaturedCars] = useState(null);
     const [, setIsAdminPage] = useContext(AdminContext);
+    const { userId } = useAuth();
     useEffect(() => {
         setIsAdminPage(false)
     }, [])
@@ -29,7 +31,8 @@ export const Home = () => {
     useEffect(() => {
         try {
             const getData = async () => {
-                const response = await axios.get("https://autobee-backend.onrender.com/api");
+                const params = userId ? { userId } : {};
+                const response = await axios.get("https://autobee-backend.onrender.com/api", { params });
                 setFeaturedCars(response.data.cars);
             }
 
@@ -37,7 +40,7 @@ export const Home = () => {
         } catch (error) {
             console.log(error)
         }
-    }, [])
+    }, [userId])
 
     return (
         <div>
