@@ -31,7 +31,8 @@ export const Home = () => {
     useEffect(() => {
         try {
             const getData = async () => {
-                const response = await axios.get("https://autobee-backend.onrender.com/api");
+                const params = userId ? { userId } : {};
+                const response = await axios.get("https://autobee-backend.onrender.com/api",{params});
                 setFeaturedCars(response.data.cars);
             }
 

@@ -13,6 +13,10 @@ export const CarCard = ({ car }) => {
     const { isSignedIn, userId } = useAuth();
     const [isSaved, setIsSaved] = useState(car.wishlisted);
 
+    useEffect(() => {
+        setIsSaved(car.wishlisted);
+    }, [car.wishlisted]);
+
     const navigate = useNavigate();
     // Use the useFetch hook
     const {
